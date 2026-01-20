@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "@/components/input"
+import { api } from "@/lib/api"
+import { useRouter } from "next/navigation"
 
 const schema = z.object({
     name: z.string().min(1, "O campo nome é obrigatório!"),
@@ -18,13 +20,24 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>
 
-export function NewCustomerForm() {
+export function NewCustomerForm({ userId }: { userId: string }) {
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema)
     })
 
-    function handleRegisterCustomer(data: FormData) {
-        console.log(data);
+    const router = useRouter();
+
+    async function handleRegisterCustomer(data: FormData) {
+        await api.post("/api/customer", {
+            name: data.name,
+            email: data.email,
+            phone: data.phone,
+            address: data.address,
+            userId: userId
+        })
+
+        router.refresh();
+        router.replace("/dashboard/customer");
     }
 
     return (
@@ -40,7 +53,7 @@ export function NewCustomerForm() {
 
             <section className="flex gap-3 my-3 flex-col sm:flex-row">
                 <div className="flex-1">
-                    <label htmlFor="" className="mb-1 text-lg font-medium">Nome completo</label>
+                    <label htmlFor="" className="mb-1 text-lg font-medium">Telefone</label>
                     <Input 
                         type="number"
                         name="phone"
@@ -51,7 +64,7 @@ export function NewCustomerForm() {
                 </div>
 
                 <div className="flex-1">
-                    <label htmlFor="" className="mb-1 text-lg font-medium">Nome completo</label>
+                    <label htmlFor="" className="mb-1 text-lg font-medium">E-mail</label>
                     <Input 
                         type="email"
                         name="email"
@@ -62,7 +75,7 @@ export function NewCustomerForm() {
                 </div>
             </section>
 
-            <label htmlFor="" className="mb-1 text-lg font-medium">Nome completo</label>
+            <label htmlFor="" className="mb-1 text-lg font-medium">Endereço</label>
             <Input 
                 type="text"
                 name="address"
