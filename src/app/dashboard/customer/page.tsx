@@ -28,6 +28,10 @@ export default async function Customer() {
                     <Link href="/dashboard/customer/new" className="bg-blue-500 text-white px-4 py-1 rounded">Novo Cliente</Link>
                 </div>
 
+                {customers.length === 0 && (
+                    <h1 className="text-gray-600 mt-3 pl-1">Você ainda não tem clientes cadastrados! <Link href="/dashboard/customer/new" className="text-blue-700 hover:text-blue-500 hover:font-medium hover:underline">Cadastrar novo cliente</Link></h1>
+                )}
+
                 <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-5">
                     { customers.map(customer => (
                         <CardCustomer 
