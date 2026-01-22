@@ -42,27 +42,47 @@ export function TicketItem({ customer, ticket }: TicketItemProps) {
 
     return (
         <>
-            <tr className="border-b-2 border-b-slate-200 h-16 last:border-b-0 bg-slate-100 hover:bg-gray-200 duration-300">
-                <td className="text-left pl-1">
-                    {customer?.name}
+            <tr className="border-b border-gray-100 last:border-b-0 bg-white hover:bg-blue-50/30 transition-all duration-300 group">
+                <td className="text-left pl-4 py-4">
+                    <span className="font-semibold text-gray-700 block sm:inline">
+                        {customer?.name}
+                    </span>
                 </td>
 
-                <td className="text-left hidden sm:table-cell">
+                <td className="text-left hidden sm:table-cell py-4 text-gray-500 text-sm">
                     {ticket?.created_at?.toLocaleDateString("pt-br")}
                 </td>
 
-                <td className="text-left">
-                    <span className={`font-medium px-2 py-1 rounded ${ticket.status === 'FECHADO' ? 'bg-red-500' : 'bg-green-500'}`}>{ticket.status}</span>
+                <td className="text-left py-4">
+                    <span 
+                        className={`text-xs font-bold px-3 py-1.5 rounded-full border ${
+                            ticket.status === 'FECHADO' 
+                            ? 'bg-red-100 text-red-600 border-red-200' 
+                            : 'bg-green-100 text-green-600 border-green-200'
+                        }`}
+                    >
+                        {ticket.status}
+                    </span>
                 </td>
 
-                <td className="text-right pr-2">
-                    <button className="cursor-pointer mr-3" onClick={handleOpenModal}>
-                        <FiFile size={24} color="#3B82F6" />
-                    </button>
+                <td className="text-right pr-4 py-4">
+                    <div className="flex items-center justify-end gap-2">
+                        <button 
+                            className="p-2 rounded-lg hover:bg-blue-100 text-blue-500 transition-colors duration-200 cursor-pointer" 
+                            onClick={handleOpenModal}
+                            title="Ver detalhes"
+                        >
+                            <FiFile size={20} />
+                        </button>
 
-                    <button className="mr-2 cursor-pointer" onClick={handleChangeStatus}>
-                        <FiCheckSquare size={24} className="text-[#131313] hover:text-green-600 duration-200" />
-                    </button>
+                        <button 
+                            className="p-2 rounded-lg hover:bg-green-100 text-gray-400 hover:text-green-600 transition-all duration-200 cursor-pointer" 
+                            onClick={handleChangeStatus}
+                            title="Mudar status"
+                        >
+                            <FiCheckSquare size={20} />
+                        </button>
+                    </div>
                 </td>
             </tr>
         </>

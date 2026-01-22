@@ -1,6 +1,7 @@
 "use client"
 
-import Select from 'react-select'
+import { useMemo, useState } from 'react';
+import Select from 'react-select';
 
 interface Customer {
   id: string;
@@ -8,28 +9,53 @@ interface Customer {
 }
 
 export function CustomerSelect({ customers }: { customers: Customer[] }) {
-  const options = customers.map(customer => ({
-    value: customer.id,
-    label: customer.name
-  }));
+  // 1. Guardamos o ID selecionado para enviar no formulário
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string>("");
+
+  // 2. Usamos useMemo para a lista não "piscar" ou travar o filtro
+  const options = useMemo(() => 
+    customers.map(customer => ({
+      value: customer.id,
+      label: customer.name
+    })), [customers]);
 
   return (
-    <div className="flex flex-col w-full">
-      <label className="mb-1 font-medium text-lg">Cliente</label>
+    <div className="flex flex-col w-full gap-2">
+      <label className="font-bold text-gray-700 text-lg">Cliente</label>
+      
+      {/* 3. Input escondido para o seu handleRegisterTicket receber o ID com o nome "customer" */}
+      <input type="hidden" name="customer" value={selectedCustomerId} />
+
       <Select
-        name="customer"
+        instanceId="customer-select-unique-id" // 4. Essencial para Next.js 14/15/16
         options={options}
-        placeholder="Selecione ou digite o nome..."
+        placeholder="Procure pelo nome do cliente..."
         noOptionsMessage={() => "Nenhum cliente encontrado"}
-        isSearchable={true}
+        isSearchable={true} 
+        isClearable={true}
+        onChange={(opt) => setSelectedCustomerId(opt?.value || "")} // Atualiza o input hidden
+        
         styles={{
-          control: (base) => ({
+          control: (base, state) => ({
             ...base,
-            height: '44px',
-            borderRadius: '6px',
-            borderWidth: '2px',
-            borderColor: '#e2e8f0',
-          })
+            height: '48px',
+            borderRadius: '8px',
+            borderWidth: '1px',
+            borderColor: state.isFocused ? '#3b82f6' : '#e5e7eb',
+            boxShadow: state.isFocused ? '0 0 0 4px rgba(59, 130, 246, 0.1)' : 'none',
+            '&:hover': { borderColor: '#3b82f6' }
+          }),
+          menu: (base) => ({
+            ...base,
+            borderRadius: '8px',
+            zIndex: 50 // Garante que a lista apareça sobre outros elementos
+          }),
+          option: (base, state) => ({
+            ...base,
+            backgroundColor: state.isSelected ? '#3b82f6' : state.isFocused ? '#eff6ff' : 'white',
+            color: state.isSelected ? 'white' : '#374151',
+            cursor: 'pointer',
+          }),
         }}
       />
     </div>

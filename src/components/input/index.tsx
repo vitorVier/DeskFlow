@@ -19,10 +19,21 @@ export function Input({ type, placeholder, name, register, error, rules }: Input
                 placeholder={placeholder}
                 id={name}
                 {...register(name, rules)}
-                className="w-full border-2 rounded-md h-11 px-2 border-[#e2e8f0] focus:outline-blue-500"
+                className={`
+                    w-full border rounded-lg h-12 px-4 
+                    border-gray-200 outline-none
+                    placeholder:text-gray-400
+                    transition-all duration-200
+                    focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10
+                    ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-500/10' : ''}
+                `}
             />
 
-            { error && <p className="text-red-500 my-1">{error}</p> }
+            {error && (
+                <p className="text-red-500 text-sm font-medium mt-1 animate-in fade-in slide-in-from-top-1">
+                    {error}
+                </p>
+            )}
         </>
     )
 }

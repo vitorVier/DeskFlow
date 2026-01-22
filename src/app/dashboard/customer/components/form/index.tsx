@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "@/components/input"
 import { api } from "@/lib/api"
 import { useRouter } from "next/navigation"
+import { FiMail, FiMapPin, FiPhone, FiSave, FiUser } from "react-icons/fi"
 
 const schema = z.object({
     name: z.string().min(1, "O campo nome é obrigatório!"),
@@ -41,54 +42,71 @@ export function NewCustomerForm({ userId }: { userId: string }) {
     }
 
     return (
-        <form className="flex flex-col mt-6" onSubmit={handleSubmit(handleRegisterCustomer)}>
-            <label htmlFor="" className="mb-1 text-lg font-medium">Nome completo</label>
-            <Input 
-                type="text"
-                name="name"
-                placeholder="Digite o nome completo..."
-                error={errors.name?.message}
-                register={register}
-            />
+        <form className="flex flex-col gap-6 mt-2" onSubmit={handleSubmit(handleRegisterCustomer)}>
+            <div className="flex flex-col gap-2">
+                <label className="text-gray-700 font-bold flex items-center gap-2">
+                    <FiUser size={18} className="text-blue-500" />
+                    Nome completo
+                </label>
+                <Input 
+                    type="text"
+                    name="name"
+                    placeholder="Digite o nome completo..."
+                    error={errors.name?.message}
+                    register={register}
+                />
+            </div>
 
-            <section className="flex gap-3 my-3 flex-col sm:flex-row">
-                <div className="flex-1">
-                    <label htmlFor="" className="mb-1 text-lg font-medium">Telefone</label>
+            <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-2">
+                    <label className="text-gray-700 font-bold flex items-center gap-2">
+                        <FiPhone size={18} className="text-blue-500" />
+                        Telefone
+                    </label>
                     <Input 
-                        type="number"
+                        type="text"
                         name="phone"
-                        placeholder="Ex: (DD) 912345678"
+                        placeholder="Ex: (DD) 91234-5678"
                         error={errors.phone?.message}
                         register={register}
                     />
                 </div>
 
-                <div className="flex-1">
-                    <label htmlFor="" className="mb-1 text-lg font-medium">E-mail</label>
+                <div className="flex flex-col gap-2">
+                    <label className="text-gray-700 font-bold flex items-center gap-2">
+                        <FiMail size={18} className="text-blue-500" />
+                        E-mail
+                    </label>
                     <Input 
                         type="email"
                         name="email"
-                        placeholder="Digite o e-mail..."
+                        placeholder="email@exemplo.com"
                         error={errors.email?.message}
                         register={register}
                     />
                 </div>
             </section>
 
-            <label htmlFor="" className="mb-1 text-lg font-medium">Endereço</label>
-            <Input 
-                type="text"
-                name="address"
-                placeholder="Digite o endereço completo..."
-                error={errors.address?.message}
-                register={register}
-            />
+            <div className="flex flex-col gap-2">
+                <label className="text-gray-700 font-bold flex items-center gap-2">
+                    <FiMapPin size={18} className="text-blue-500" />
+                    Endereço (Opcional)
+                </label>
+                <Input 
+                    type="text"
+                    name="address"
+                    placeholder="Rua, número, bairro e cidade..."
+                    error={errors.address?.message}
+                    register={register}
+                />
+            </div>
 
             <button 
                 type="submit"
-                className="bg-blue-500 my-4 px-2 h-11 rounded text-white font-bold cursor-pointer hover:brightness-110"
+                className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 rounded-lg mt-4 transition-all shadow-md shadow-blue-100 active:scale-[0.98] cursor-pointer"
             >
-                Cadastrar
+                <FiSave size={20} />
+                Cadastrar Cliente
             </button>
         </form>
     )
