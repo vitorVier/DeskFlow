@@ -9,7 +9,7 @@ export function CardCustomer({ customer }: { customer: CustomerProps }) {
 
     async function handleDeleteCustomer() {
         try{
-            const response = await api.delete("/api/customer", {
+            await api.delete("/api/customer", {
                 params: {
                     id: customer.id
                 }
@@ -23,7 +23,7 @@ export function CardCustomer({ customer }: { customer: CustomerProps }) {
     } 
 
     return (
-        <article className="flex flex-col bg-gray-100 border-2 border-gray-300 p-2 rounded-lg gap-2 hover:scale-105 duration-300">
+        <article className="flex flex-col bg-gray-100 border-2 border-[#e2e8f0] p-2 rounded-lg gap-2 hover:scale-[103%] duration-300">
             <h2>
                 <a className="font-bold">Nome:</a> {customer.name}
             </h2>
