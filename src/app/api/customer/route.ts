@@ -35,6 +35,14 @@ export async function POST(request: Request) {
 
     const { name, email, phone, address, userId } = await request.json()
 
+    const findCustomer = await prismaClient.customer.findFirst({
+        where: {
+            email: email as string
+        }
+    })
+
+    if(findCustomer) return NextResponse.json({ message: "Failed update ticket"}, { status: 400 })
+
     try {
         await prismaClient.customer.create({
             data: {

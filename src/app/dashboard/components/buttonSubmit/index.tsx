@@ -28,6 +28,7 @@ export function ButtonSubmit(
                         return; 
                     }
                     
+                    toast(`Verifique se o e-mail do cliente já está na sua base de dados`);
                     toast.error(`Erro ao criar o ${name.toLowerCase()}.`);
                 }
             }}

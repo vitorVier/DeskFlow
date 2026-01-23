@@ -20,7 +20,7 @@ export function CardCustomer({ customer }: { customer: CustomerProps }) {
             toast.success("Cliente excluído com sucesso!")
             router.refresh();
         } catch(err) {
-            toast.error("Verifique se o cliente possui algum ticket em aberto!")
+            toast('Verifique se o cliente possui tickets em aberto!');
             toast.error("Erro ao deletar cliente!")
             console.log(err)
         }

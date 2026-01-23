@@ -23,7 +23,10 @@ export default async function Dashboard({
     }
 
     const whereCondition: any = {
-        userId: session.user.id,
+        OR: [
+            { userId: session.user.id },
+            { userId: null } // Inclui os tickets criados por usuários não logados
+        ]
     };
 
     if (status === "ABERTO" || status === "FECHADO") {
