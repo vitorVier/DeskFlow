@@ -31,9 +31,7 @@ export default async function Dashboard({
     }
 
     const tickets = await prismaClient.ticket.findMany({
-        where: {
-            customer: whereCondition
-        },
+        where: whereCondition,
         include: {
             customer: true
         },
@@ -55,10 +53,10 @@ export default async function Dashboard({
         
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                     
-                    <div className="flex items-center gap-3 pl-1">
-                        <FaTasks size={28} className="text-blue-600 shrink-0" />
-                        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-800 tracking-tight">
-                            Chamados
+                    <div className="flex items-center gap-3 pl-2">
+                        <FaTasks size={32} className="text-blue-600" />
+                        <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight">
+                            Meus Tickets
                         </h1>
                     </div>
 
