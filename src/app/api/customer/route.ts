@@ -2,6 +2,7 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import prismaClient from "@/lib/prisma";
+import toast from "react-hot-toast";
 
 // http://localhost:3000/api/customer
 
@@ -70,7 +71,9 @@ export async function DELETE(request: Request) {
         }
     })
 
-    if(findTickets) return alert(NextResponse.json({ error: "Impossível deletar. O cliente tem um chamado em aberto!" }, { status: 400 }))
+    if(findTickets) {
+        return alert(NextResponse.json({ error: "Impossível deletar. O cliente tem um chamado em aberto!" }, { status: 400 }))
+    }
 
     try {
         await prismaClient.customer.delete({
@@ -81,7 +84,6 @@ export async function DELETE(request: Request) {
 
         return NextResponse.json({ message: "Cliente deletado com sucesso!" })
     } catch(err) {
-        console.log(err)
         return NextResponse.json({ error: "Failed delete customer" }, { status: 400 })
     }
 }

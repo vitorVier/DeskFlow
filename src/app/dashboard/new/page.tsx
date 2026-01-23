@@ -5,7 +5,8 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prismaClient from "@/lib/prisma"
 import { CustomerSelect } from "../components/customerSelect";
-import { FiAlertCircle, FiArrowLeft } from "react-icons/fi";
+import { FiAlertCircle, FiArrowLeft, FiSave } from "react-icons/fi";
+import { ButtonSubmit } from "../components/buttonSubmit";
 
 export default async function NewTicket() {
     const session = await getServerSession(authOptions);
@@ -105,13 +106,10 @@ export default async function NewTicket() {
                             </div>
                         )}
 
-                        <button
-                            type="submit"
-                            className="bg-blue-600 text-white font-bold h-12 rounded-lg mt-2 cursor-pointer hover:bg-blue-700 transition-all shadow-md shadow-blue-200 active:scale-[0.98] disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none"
-                            disabled={customers.length === 0}
-                        >
-                            Cadastrar Ticket
-                        </button>
+                        <ButtonSubmit 
+                            name={'ticket'}
+                            action={handleRegisterTicket}
+                        />
                     </form>
                 </section>
             </main>

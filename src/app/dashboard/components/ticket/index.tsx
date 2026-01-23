@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { ModalContext } from "@/providers/modal";
+import toast from "react-hot-toast";
 
 interface TicketItemProps {
     ticket: TicketProps;
@@ -23,12 +24,12 @@ export function TicketItem({ customer, ticket }: TicketItemProps) {
             await api.patch("/api/ticket", {
                 id: ticket.id
             })
-
             
         } catch(err){
             console.log(err)
         }
 
+        toast.success("Ticket encerrado com sucesso!")
         router.refresh()
     }
 

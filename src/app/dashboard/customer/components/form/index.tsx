@@ -7,6 +7,7 @@ import { Input } from "@/components/input"
 import { api } from "@/lib/api"
 import { useRouter } from "next/navigation"
 import { FiMail, FiMapPin, FiPhone, FiSave, FiUser } from "react-icons/fi"
+import { ButtonSubmit } from "@/app/dashboard/components/buttonSubmit"
 
 const schema = z.object({
     name: z.string().min(1, "O campo nome é obrigatório!"),
@@ -19,30 +20,38 @@ const schema = z.object({
     address: z.string()
 })
 
-type FormData = z.infer<typeof schema>
+type CustomerFormData = z.infer<typeof schema>
 
 export function NewCustomerForm({ userId }: { userId: string }) {
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+    const { register, trigger, getValues, formState: { errors } } = useForm<CustomerFormData>({
         resolver: zodResolver(schema)
     })
 
     const router = useRouter();
 
-    async function handleRegisterCustomer(data: FormData) {
-        await api.post("/api/customer", {
-            name: data.name,
-            email: data.email,
-            phone: data.phone,
-            address: data.address,
-            userId: userId
-        })
+    async function handleRegisterCustomer(formData: FormData) {
+        const isValid = await trigger();
+        if (!isValid) return;
+        const data = getValues();
 
-        router.refresh();
-        router.replace("/dashboard/customer");
+        try {
+            await api.post("/api/customer", {
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                address: data.address,
+                userId: userId
+            })
+
+            router.refresh();
+            router.replace("/dashboard/customer");
+        } catch(err) {
+            throw err;
+        }
     }
 
     return (
-        <form className="flex flex-col gap-6 mt-2" onSubmit={handleSubmit(handleRegisterCustomer)}>
+        <form className="flex flex-col gap-6 mt-2">
             <div className="flex flex-col gap-2">
                 <label className="text-gray-700 font-bold flex items-center gap-2">
                     <FiUser size={18} className="text-blue-500" />
@@ -101,13 +110,10 @@ export function NewCustomerForm({ userId }: { userId: string }) {
                 />
             </div>
 
-            <button 
-                type="submit"
-                className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 rounded-lg mt-4 transition-all shadow-md shadow-blue-100 active:scale-[0.98] cursor-pointer"
-            >
-                <FiSave size={20} />
-                Cadastrar Cliente
-            </button>
+            <ButtonSubmit 
+                name={'cliente'}
+                action={handleRegisterCustomer}
+            />
         </form>
     )
 }

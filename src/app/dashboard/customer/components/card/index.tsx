@@ -3,6 +3,7 @@
 import { api } from "@/lib/api"
 import { CustomerProps } from "@/utils/customer.type"
 import { useRouter } from "next/navigation"
+import toast from "react-hot-toast";
 import { FiMail, FiPhone, FiTrash2, FiUser } from "react-icons/fi";
 
 export function CardCustomer({ customer }: { customer: CustomerProps }) {
@@ -16,9 +17,11 @@ export function CardCustomer({ customer }: { customer: CustomerProps }) {
                 }
             })
 
+            toast.success("Cliente excluído com sucesso!")
             router.refresh();
-            
         } catch(err) {
+            toast.error("Verifique se o cliente possui algum ticket em aberto!")
+            toast.error("Erro ao deletar cliente!")
             console.log(err)
         }
     } 
@@ -28,7 +31,6 @@ export function CardCustomer({ customer }: { customer: CustomerProps }) {
             <div className="absolute left-0 top-0 h-full w-1 bg-blue-500"></div>
 
             <div className="flex flex-col gap-4">
-                {/* Cabeçalho com Nome e ícone */}
                 <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2">
                         <div className="bg-blue-50 p-2 rounded-full">

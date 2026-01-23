@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/header";
 import { AuthProvider } from "@/providers/auth";
 import { ModalProvider } from "@/providers/modal";
+import ToastProvider from "@/components/toastProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
           <ModalProvider>
             <Header />
             {children}
+            <ToastProvider />
           </ModalProvider>
         </AuthProvider>
       </body>
