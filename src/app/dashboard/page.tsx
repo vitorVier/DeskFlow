@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { TicketItem } from "./components/ticket";
 import prismaClient from "@/lib/prisma"
 import { FaTasks } from "react-icons/fa";
+import { ButtonRefresh } from "./components/buttonRefresh";
 
 export default async function Dashboard() {
     const session = await getServerSession(authOptions);
@@ -16,20 +17,31 @@ export default async function Dashboard() {
 
     const tickets = await prismaClient.ticket.findMany({
         where: {
-            userId: session.user.id
+            customer: {
+                userId: session.user.id
+            }
         },
         include: {
             customer: true
+        },
+        orderBy: {
+            created_at: "desc"
         }
     })
 
     const isOpen = await prismaClient.ticket.findMany({
         where: {
             userId: session.user.id,
-            status: "ABERTO"
+            status: "ABERTO",
+            customer: {
+                userId: session.user.id
+            }
         },
         include: {
             customer: true
+        },
+        orderBy: {
+            created_at: "desc"
         }
     })
 
@@ -42,12 +54,16 @@ export default async function Dashboard() {
                         <h1 className="text-3xl font-extrabold text-gray-800">Chamados</h1>
                     </div>
 
-                    <Link 
-                        href="/dashboard/new" 
-                        className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg text-white font-semibold transition-all shadow-md active:scale-95"
-                    >
-                        Novo ticket
-                    </Link>
+                    <div className="flex items-center justify-center gap-2">
+                        <ButtonRefresh />
+
+                        <Link 
+                            href="/dashboard/new" 
+                            className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg text-white font-semibold transition-all shadow-md active:scale-95"
+                        >
+                            Novo ticket
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
