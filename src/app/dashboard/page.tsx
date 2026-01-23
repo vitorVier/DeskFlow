@@ -7,20 +7,30 @@ import { TicketItem } from "./components/ticket";
 import prismaClient from "@/lib/prisma"
 import { FaTasks } from "react-icons/fa";
 import { ButtonRefresh } from "./components/buttonRefresh";
+import { StatusFilter } from "./components/statusFilter";
 
-export default async function Dashboard() {
+export default async function Dashboard({
+    searchParams,
+} : {
+    searchParams: Promise<{ [ key: string ]: string | string[] | undefined }>
+}) {
     const session = await getServerSession(authOptions);
+    const { status } = await searchParams;
 
     if(!session || !session.user) {
         redirect('/')
     }
 
+    const whereCondition: any = {
+        userId: session.user.id,
+    };
+
+    if (status === "ABERTO" || status === "FECHADO") {
+        whereCondition.status = status;
+    }
+
     const tickets = await prismaClient.ticket.findMany({
-        where: {
-            customer: {
-                userId: session.user.id
-            }
-        },
+        where: whereCondition,
         include: {
             customer: true
         },
@@ -29,21 +39,12 @@ export default async function Dashboard() {
         }
     })
 
-    const isOpen = await prismaClient.ticket.findMany({
+    const isOpenCount = await prismaClient.ticket.count({
         where: {
             userId: session.user.id,
-            status: "ABERTO",
-            customer: {
-                userId: session.user.id
-            }
-        },
-        include: {
-            customer: true
-        },
-        orderBy: {
-            created_at: "desc"
+            status: "ABERTO"
         }
-    })
+    });
 
     return(
         <Container>
@@ -55,8 +56,8 @@ export default async function Dashboard() {
                     </div>
 
                     <div className="flex items-center justify-center gap-2">
+                        <StatusFilter />
                         <ButtonRefresh />
-
                         <Link 
                             href="/dashboard/new" 
                             className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg text-white font-semibold transition-all shadow-md active:scale-95"
