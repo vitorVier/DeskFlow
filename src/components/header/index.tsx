@@ -61,7 +61,7 @@ export function Header() {
                             </Link>
 
                             <Link 
-                                href="/dashboard/profile"
+                                href="/dashboard/customer"
                                 className={`p-2.5 rounded-xl transition-all border ${
                                     isActive("/dashboard/profile")
                                     ? "bg-blue-50 text-blue-600 border-blue-100" 
