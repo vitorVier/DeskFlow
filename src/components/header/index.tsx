@@ -17,8 +17,13 @@ export function Header() {
         await signOut();
     }
 
-    // Função para verificar se o link está ativo
-    const isActive = (path: string) => pathname.startsWith(path);
+    const isActive = (path: string) => {
+        if (path === "/dashboard") {
+            // Ativa apenas se estiver no dashboard e NÃO estiver em clientes
+            return pathname === "/dashboard" || pathname.startsWith("/dashboard/new");
+        }
+        return pathname.startsWith(path);
+    };
 
     return (
         <header className="w-full flex items-center bg-white h-20 shadow-sm border-b border-gray-100 sticky top-0 z-50">
@@ -51,8 +56,8 @@ export function Header() {
                             <Link 
                                 href="/dashboard"
                                 className={`p-2.5 rounded-xl transition-all border ${
-                                    isActive("/dashboard") && !isActive("/dashboard/profile") // Exemplo de diferenciação
-                                    ? "bg-blue-50 text-blue-600 border-blue-100" 
+                                    isActive("/dashboard")
+                                    ? "bg-blue-50 text-blue-600 border-blue-100 shadow-sm" 
                                     : "text-gray-500 hover:bg-gray-50 border-transparent"
                                 }`}
                                 title="Ir para o Painel"
@@ -63,11 +68,11 @@ export function Header() {
                             <Link 
                                 href="/dashboard/customer"
                                 className={`p-2.5 rounded-xl transition-all border ${
-                                    isActive("/dashboard/profile")
-                                    ? "bg-blue-50 text-blue-600 border-blue-100" 
+                                    isActive("/dashboard/customer")
+                                    ? "bg-blue-50 text-blue-600 border-blue-100 shadow-sm" 
                                     : "text-gray-500 hover:bg-gray-50 border-transparent"
                                 }`}
-                                title="Meu Perfil"
+                                title="Meus Clientes"
                             >
                                 <FiUser size={24} />
                             </Link>
