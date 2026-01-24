@@ -4,6 +4,7 @@ import { ModalContext } from "@/providers/modal";
 import { useSession } from "next-auth/react";
 import { MouseEvent, useContext, useRef } from "react";
 import { IoClose } from "react-icons/io5";
+import { InputClientData } from "./components/inputClientData";
 
 export function ModalTicket() {
     const { data: session } = useSession();
@@ -70,21 +71,13 @@ export function ModalTicket() {
                         <div className="flex grow border-t border-gray-200"></div>
                     </div>
 
+                    {/* Dados do Cliente */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-                        <div className="bg-blue-50/30 p-3 rounded-lg border border-blue-100">
-                            <span className="block text-[10px] font-bold text-blue-400 uppercase">Nome</span>
-                            <p className="text-gray-800 font-semibold text-sm md:text-base">{ticket?.customer?.name}</p>
-                        </div>
-                        
-                        <div className="bg-blue-50/30 p-3 rounded-lg border border-blue-100">
-                            <span className="block text-[10px] font-bold text-blue-400 uppercase">Telefone</span>
-                            <p className="text-gray-800 font-semibold text-sm md:text-base">{ticket?.customer?.phone}</p>
-                        </div>
+                        <InputClientData label="nome" value={ticket?.customer?.name || "Não informado"} />
 
-                        <div className="bg-blue-50/30 p-3 rounded-lg border border-blue-100">
-                            <span className="block text-[10px] font-bold text-blue-400 uppercase">E-mail</span>
-                            <p className="text-gray-800 font-semibold text-sm md:text-base break-all">{ticket?.customer?.email}</p>
-                        </div>
+                        <InputClientData label="telefone" value={ticket?.customer?.phone || "Não informado"} />
+
+                        <InputClientData label="E-mail" value={ticket?.customer?.email || "Não informado"} />
 
                         <div className="bg-blue-50/30 p-3 rounded-lg border border-blue-100 sm:col-span-2">
                             <span className="block text-[10px] font-bold text-blue-400 uppercase">Endereço</span>
@@ -93,7 +86,6 @@ export function ModalTicket() {
                     </div>
                 </div>
 
-                {/* Footer - Fixo na base */}
                 <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-end">
                     <button 
                         onClick={handleModalVisible}
