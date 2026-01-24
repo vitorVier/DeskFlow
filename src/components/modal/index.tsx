@@ -1,10 +1,13 @@
 "use client"
 
 import { ModalContext } from "@/providers/modal";
+import { useSession } from "next-auth/react";
 import { MouseEvent, useContext, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 
 export function ModalTicket() {
+    const { data: session } = useSession();
+
     const { handleModalVisible, ticket } = useContext(ModalContext)
     const modalRef = useRef<HTMLDivElement | null>(null);
 
@@ -37,10 +40,25 @@ export function ModalTicket() {
 
                 <div className="p-6 space-y-6">
                     <div className="space-y-4">
-                        <div className="flex flex-col">
-                            <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Assunto</span>
-                            <p className="text-gray-700 font-medium text-lg">{ticket?.ticket.name}</p>
+                        <div className="w-full flex flex-col md:flex-row md:justify-between">
+                            <div className="flex flex-col">
+                                <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Autor</span>
+                                <p className="text-gray-700 font-medium text-lg">
+                                    {ticket?.ticket.userId ? (
+                                        session?.user?.name
+                                    ) : (
+                                        ticket?.customer?.name
+                                    )}        
+                                </p>
+                                
+                            </div>
+
+                            <div className="flex flex-col md:mr-15">
+                                <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Assunto</span>
+                                <p className="text-gray-700 font-medium text-lg">{ticket?.ticket.name}</p>
+                            </div>
                         </div>
+                        
 
                         <div className="flex flex-col">
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Descrição</span>
