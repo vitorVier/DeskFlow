@@ -42,12 +42,12 @@ export function ModalTicket() {
                     <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
                         <div className="flex flex-col">
                             <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-400">Assunto</span>
-                            <p className="text-gray-700 font-medium text-base md:text-lg pr-1">{ticket?.ticket.name}</p>
+                            <p className="text-gray-700 font-medium text-base md:text-lg">{ticket?.ticket.name}</p>
                         </div>
 
                         <div className="flex flex-col">
                             <span className="text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-400">Autor</span>
-                            <p className="text-gray-700 font-medium text-base md:text-lg">
+                            <p className="text-gray-700 font-medium text-base md:text-lg pr-1">
                                 {ticket?.ticket.userId ? (
                                     session?.user?.name
                                 ) : (
