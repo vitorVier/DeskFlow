@@ -7,17 +7,20 @@ import { useFormStatus } from "react-dom";
 interface ButtonProps {
   action: (formData: FormData) => Promise<void>;
   name: string;
+  disabledManual?: boolean;
 }
 
 export function ButtonSubmit(
-    { action, name }: ButtonProps
+    { action, name, disabledManual }: ButtonProps
 ) {
     const { pending } = useFormStatus();
+    const isBlocked = pending || disabledManual;
 
     return (
         <button 
             type="submit"
-            disabled={pending}
+            // disabled={pending}
+            disabled={isBlocked}
             formAction={async (formData: FormData) => {
                 try {
                     await action(formData);
@@ -32,7 +35,13 @@ export function ButtonSubmit(
                     toast.error(`Erro ao criar o ${name.toLowerCase()}.`);
                 }
             }}
-            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold h-12 rounded-lg mt-4 transition-all shadow-md shadow-blue-100 active:scale-[0.98] cursor-pointer"
+            className={`
+                flex items-center justify-center gap-2 w-full font-bold h-12 rounded-lg mt-4 transition-all
+                ${isBlocked 
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed select-none" // Cinza se estiver bloqueado
+                    : "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer active:scale-[0.98]" // Azul se estiver liberado
+                }
+            `}
         >
             <FiSave size={20} />
             {pending ? "Cadastrando..." : `Cadastrar ${name}`}

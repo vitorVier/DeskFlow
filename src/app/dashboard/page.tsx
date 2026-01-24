@@ -9,6 +9,10 @@ import { FaTasks } from "react-icons/fa";
 import { ButtonRefresh } from "./components/buttonRefresh";
 import { StatusFilter } from "./components/statusFilter";
 import { IoMdAdd } from "react-icons/io";
+import { SearchInput } from "./components/search";
+import { DateFilter } from "./components/dateFilter";
+import { RxCalendar } from "react-icons/rx";
+import { IoTicketOutline } from "react-icons/io5";
 
 export default async function Dashboard({
     searchParams,
@@ -54,7 +58,7 @@ export default async function Dashboard({
         <Container>
             <main className="mt-4 sm:mt-9 mb-2 max-w-7xl mx-auto px-2 sm:px-4">
         
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                     
                     <div className="flex items-center gap-3 pl-2">
                         <FaTasks size={32} className="text-blue-600" />
@@ -64,9 +68,7 @@ export default async function Dashboard({
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <div className="flex-1 sm:flex-none">
-                            <StatusFilter />
-                        </div>
+                        <SearchInput placeholder="Buscar tickets..." />
                         
                         <div className="flex items-center gap-2">
                             <ButtonRefresh />
@@ -81,6 +83,24 @@ export default async function Dashboard({
                         </div>
                     </div>
                 </div>
+
+                <section className="flex gap-3 mb-6">
+                    <div className="flex-1 sm:flex-none">
+                        <StatusFilter />
+                    </div>
+
+                    <div className="flex items-center sm:flex-none">
+                        <DateFilter value="all" icon={
+                            <RxCalendar size={22} className="text-blue-600 z-10" />
+                        } />
+                    </div>
+
+                    <div className={`flex items-center justify-start gap-2 bg-white border border-gray-200 rounded-xl px-4 h-11 shadow-sm hover:border-gray-300 transition-all cursor-pointer group focus:ring-4 focus:ring-blue-500/10`}>
+                        <IoTicketOutline size={22} className="text-blue-600" />
+                        <p className="pr-2"><span className="font-medium">{tickets.length}</span> tickets</p>
+                    </div>
+                    
+                </section>
 
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-200">
                     <table className="min-w-150 w-full">
