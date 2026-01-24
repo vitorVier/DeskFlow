@@ -2,27 +2,22 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { CustomSelect, SelectOption } from "../select";
+import { RxCalendar } from "react-icons/rx";
 
-export type DateFilterValue = 'all' | 'today' | 'week' | 'month';
+export type DateFilterValue = 'all' | 'today' | 'week' | 'month' | 'year';
 
-interface DateFilterProps {
-    value: DateFilterValue;
-    icon?: React.ReactNode;
-    // onChange: (value: DateFilterValue) => void;
-}
-
-const options: SelectOption[] = [
-    { value: "all", label: "Todo o período"},
-    { value: "today", label: "Hoje"},
-    { value: "week", label: "Essa semana"},
-    { value: "month", label: "Esse mês"},
-    { value: "year", label: "Esse ano"},
-];
-
-export function DateFilter({ value, /*onChange*/ icon }: DateFilterProps) {
+export function DateFilter() {
     const searchParams = useSearchParams();
-    const currentOption = searchParams.get("date") || "all";
+    const currentDate = searchParams.get("date") || "all";
     const router = useRouter();
+
+    const options = [
+        { value: "all", label: "Período Total", color: "bg-gray-400" },
+        { value: "today", label: "Hoje", color: "bg-blue-500" },
+        { value: "week", label: "Esta Semana", color: "bg-purple-500" },
+        { value: "month", label: "Este Mês", color: "bg-orange-500" },
+        { value: "year", label: "Este Ano", color: "bg-yellow-500" },
+    ];
 
     function handleSelect(value: string) {
         const params = new URLSearchParams(searchParams.toString());
@@ -39,9 +34,9 @@ export function DateFilter({ value, /*onChange*/ icon }: DateFilterProps) {
     return (
         <CustomSelect 
             options={options} 
-            currentValue={currentOption} 
+            currentValue={currentDate} 
             onSelect={handleSelect}
-            icon={icon}
+            icon={<RxCalendar size={22} className="text-blue-600" />}
         />
     );
 }

@@ -13,6 +13,12 @@ import { SearchInput } from "./components/search";
 import { DateFilter } from "./components/dateFilter";
 import { RxCalendar } from "react-icons/rx";
 import { IoTicketOutline } from "react-icons/io5";
+import { 
+  startOfDay, endOfDay, 
+  startOfWeek, endOfWeek, 
+  startOfMonth, endOfMonth, 
+  startOfYear, endOfYear 
+} from "date-fns";
 
 export default async function Dashboard({
     searchParams,
@@ -20,12 +26,13 @@ export default async function Dashboard({
     searchParams: Promise<{ [ key: string ]: string | string[] | undefined }>
 }) {
     const session = await getServerSession(authOptions);
-    const { status } = await searchParams;
-    const { date } = await searchParams;
 
     if(!session || !session.user) {
         redirect('/')
     }
+
+    const { status, date } = await searchParams;
+    const today = new Date();
 
     // Buscar os tickets do usuário logado
     const whereCondition: any = {
@@ -35,33 +42,20 @@ export default async function Dashboard({
         ]
     };
 
-    // Filtro de data
-    const today = new Date();
-    const dateFilters: Record<string, { gte: Date; lte: Date }> = {
-        today: {
-            gte: new Date(new Date().setHours(0, 0, 0, 0)),
-            lte: new Date(new Date().setHours(23, 59, 59, 999))
-        },
-        week: {
-            gte: new Date(new Date(today).setDate(today.getDate() - today.getDay())),
-            lte: new Date(new Date(today).setDate(today.getDate() - today.getDay() + 6))
-        },
-        month: {
-            gte: new Date(today.getFullYear(), today.getMonth(), 1),
-            lte: new Date(today.getFullYear(), today.getMonth() + 1, 0)
-        },
-        year: {
-            gte: new Date(today.getFullYear(), 0, 1),
-            lte: new Date(today.getFullYear(), 11, 31, 23, 59, 59)
-        }
-    };
-    
-    if (date && dateFilters[date as string]) {
-        whereCondition.created_at = dateFilters[date as string];
-    }
-
-    // Aplicar filtros
+    // Aplica filtros de estado
     if (status === "ABERTO" || status === "FECHADO") whereCondition.status = status;
+
+    // Filtro de data
+    const dateIntervals: Record<string, { gte: Date; lte: Date }> = {
+        today: { gte: startOfDay(today), lte: endOfDay(today) },
+        week:  { gte: startOfWeek(today), lte: endOfWeek(today) },
+        month: { gte: startOfMonth(today), lte: endOfMonth(today) },
+        year:  { gte: startOfYear(today), lte: endOfYear(today) },
+    };
+
+    if (date && dateIntervals[date as string]) {
+        whereCondition.created_at = dateIntervals[date as string];
+    }
 
     // Consulta ao banco de dados
     const tickets = await prismaClient.ticket.findMany({
@@ -117,9 +111,7 @@ export default async function Dashboard({
                     </div>
 
                     <div className="flex items-center sm:flex-none">
-                        <DateFilter value="all" icon={
-                            <RxCalendar size={22} className="text-blue-600 z-10" />
-                        } />
+                        <DateFilter />
                     </div>
 
                     <div className={`flex items-center justify-start gap-2 bg-white border border-gray-200 rounded-xl px-4 h-11 shadow-sm hover:border-gray-300 transition-all cursor-pointer group focus:ring-4 focus:ring-blue-500/10`}>
