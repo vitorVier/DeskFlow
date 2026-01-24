@@ -8,6 +8,7 @@ import { FiCheckCircle, FiSearch, FiX } from "react-icons/fi"
 import { useState } from "react"
 import { FormTicket } from "./components/formTicket"
 import { api } from "@/lib/api"
+import toast from "react-hot-toast"
 
 const schema = z.object({
     email: z.string().email("Digite o email do cliente para localizar.").min(1, "O campo e-mail é obrigatório!")
@@ -41,6 +42,7 @@ export default function OpenTicket() {
 
         if(response.data === null) {
             setError("email", { type: "custom", message: "Ops, o cliente não foi encontrado!" })
+            toast.error("E-mail não cadastrado na base de dados!");
             return;
         }
 

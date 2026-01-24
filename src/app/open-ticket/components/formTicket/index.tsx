@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { api } from "@/lib/api";
 import { CustomerDataInfo } from "../../page";
 import { FiFileText, FiMessageSquare, FiSend } from "react-icons/fi";
+import toast from "react-hot-toast";
 
 const schema = z.object({
     name: z.string().min(1, "O nome do Ticket é obrigatório"),
@@ -24,14 +25,20 @@ export function FormTicket({ customer }: FormTicketProps) {
     })
 
     async function handleRegisterTicket(data: FormData) {
-        await api.post("/api/ticket", {
-            name: data.name,
-            description: data.description,
-            customerId: customer.id
-        })
+        try {
+            await api.post("/api/ticket", {
+                name: data.name,
+                description: data.description,
+                customerId: customer.id
+            })
 
-        setValue("name", "")
-        setValue("description", "")
+            setValue("name", "")
+            setValue("description", "")
+            toast.success("Ticket aberto com sucesso!");
+
+        } catch(err) {
+            console.log(err);
+        }
     }
 
     return (
@@ -68,8 +75,7 @@ export function FormTicket({ customer }: FormTicketProps) {
                 ></textarea>
                 
                 {errors.description?.message && (
-                
-                <p className="text-red-500 text-sm font-medium mt-1">{errors.description?.message}</p>
+                    <p className="text-red-500 text-sm font-medium mt-1">{errors.description?.message}</p>
                 )}
             </div>
 
