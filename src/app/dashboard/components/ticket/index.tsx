@@ -43,7 +43,10 @@ export function TicketItem({ customer, ticket }: TicketItemProps) {
 
     return (
         <>
-            <tr className="border-b border-gray-100 last:border-b-0 bg-white hover:bg-blue-50/30 transition-all duration-300 group">
+            <tr
+                onClick={handleOpenModal}
+                className="border-b border-gray-100 last:border-b-0 bg-white hover:bg-blue-50/30 transition-all duration-300 group"
+            >
                 <td className="text-left pl-4 py-4">
                     <span className="font-semibold text-gray-700 block sm:inline">
                         {customer?.name}
