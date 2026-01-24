@@ -21,11 +21,13 @@ export default async function Dashboard({
 }) {
     const session = await getServerSession(authOptions);
     const { status } = await searchParams;
+    const { date } = await searchParams;
 
     if(!session || !session.user) {
         redirect('/')
     }
 
+    // Buscar os tickets do usuário logado
     const whereCondition: any = {
         OR: [
             { userId: session.user.id },
@@ -33,10 +35,35 @@ export default async function Dashboard({
         ]
     };
 
-    if (status === "ABERTO" || status === "FECHADO") {
-        whereCondition.status = status;
+    // Filtro de data
+    const today = new Date();
+    const dateFilters: Record<string, { gte: Date; lte: Date }> = {
+        today: {
+            gte: new Date(new Date().setHours(0, 0, 0, 0)),
+            lte: new Date(new Date().setHours(23, 59, 59, 999))
+        },
+        week: {
+            gte: new Date(new Date(today).setDate(today.getDate() - today.getDay())),
+            lte: new Date(new Date(today).setDate(today.getDate() - today.getDay() + 6))
+        },
+        month: {
+            gte: new Date(today.getFullYear(), today.getMonth(), 1),
+            lte: new Date(today.getFullYear(), today.getMonth() + 1, 0)
+        },
+        year: {
+            gte: new Date(today.getFullYear(), 0, 1),
+            lte: new Date(today.getFullYear(), 11, 31, 23, 59, 59)
+        }
+    };
+    
+    if (date && dateFilters[date as string]) {
+        whereCondition.created_at = dateFilters[date as string];
     }
 
+    // Aplicar filtros
+    if (status === "ABERTO" || status === "FECHADO") whereCondition.status = status;
+
+    // Consulta ao banco de dados
     const tickets = await prismaClient.ticket.findMany({
         where: whereCondition,
         include: {

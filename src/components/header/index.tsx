@@ -58,7 +58,7 @@ export function Header() {
                                 className={`p-2.5 rounded-xl transition-all border ${
                                     isActive("/dashboard")
                                     ? "bg-blue-50 text-blue-600 border-blue-100 shadow-sm" 
-                                    : "text-gray-500 hover:bg-gray-50 border-transparent"
+                                    : "text-gray-500 hover:bg-gray-50 hover:text-blue-500 border-transparent"
                                 }`}
                                 title="Ir para o Painel"
                             >
@@ -70,7 +70,7 @@ export function Header() {
                                 className={`p-2.5 rounded-xl transition-all border ${
                                     isActive("/dashboard/customer")
                                     ? "bg-blue-50 text-blue-600 border-blue-100 shadow-sm" 
-                                    : "text-gray-500 hover:bg-gray-50 border-transparent"
+                                    : "text-gray-500 hover:bg-gray-50 hover:text-blue-500 border-transparent"
                                 }`}
                                 title="Meus Clientes"
                             >

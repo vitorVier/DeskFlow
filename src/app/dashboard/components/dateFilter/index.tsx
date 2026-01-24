@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CustomSelect, SelectOption } from "../select";
 
 export type DateFilterValue = 'all' | 'today' | 'week' | 'month';
@@ -19,18 +19,27 @@ const options: SelectOption[] = [
     { value: "year", label: "Esse ano"},
 ];
 
-function handleSelect(value: string) {
-    // onChange(value as DateFilterValue);
-}
-
 export function DateFilter({ value, /*onChange*/ icon }: DateFilterProps) {
     const searchParams = useSearchParams();
     const currentOption = searchParams.get("date") || "all";
+    const router = useRouter();
+
+    function handleSelect(value: string) {
+        const params = new URLSearchParams(searchParams.toString());
+            
+        if (value === "all") {
+            params.delete("date");
+        } else {
+            params.set("date", value);
+        }
+        
+        router.push(`/dashboard?${params.toString()}`);
+    }
 
     return (
         <CustomSelect 
             options={options} 
-            currentValue={value} 
+            currentValue={currentOption} 
             onSelect={handleSelect}
             icon={icon}
         />
