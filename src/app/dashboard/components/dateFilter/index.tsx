@@ -12,11 +12,11 @@ export function DateFilter() {
     const router = useRouter();
 
     const options = [
-        { value: "all", label: "Período Total", color: "bg-gray-400" },
-        { value: "today", label: "Hoje", color: "bg-blue-500" },
-        { value: "week", label: "Esta Semana", color: "bg-purple-500" },
-        { value: "month", label: "Este Mês", color: "bg-orange-500" },
-        { value: "year", label: "Este Ano", color: "bg-yellow-500" },
+        { value: "all", label: "Período Total" },
+        { value: "today", label: "Hoje"},
+        { value: "week", label: "Esta Semana"},
+        { value: "month", label: "Este Mês"},
+        { value: "year", label: "Este Ano"},
     ];
 
     function handleSelect(value: string) {
