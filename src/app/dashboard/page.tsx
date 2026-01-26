@@ -11,7 +11,6 @@ import { StatusFilter } from "./components/statusFilter";
 import { IoMdAdd } from "react-icons/io";
 import { SearchInput } from "./components/search";
 import { DateFilter } from "./components/dateFilter";
-import { RxCalendar } from "react-icons/rx";
 import { IoTicketOutline } from "react-icons/io5";
 import { 
   startOfDay, endOfDay, 
@@ -31,21 +30,22 @@ export default async function Dashboard({
         redirect('/')
     }
 
-    const { status, date } = await searchParams;
+    const { status, date, search } = await searchParams;
     const today = new Date();
 
     // Buscar os tickets do usuário logado
     const whereCondition: any = {
-        OR: [
-            { userId: session.user.id },
-            { userId: null } // Inclui os tickets criados por usuários não logados
+        AND: [
+            {
+                OR: [
+                    { userId: session.user.id },
+                    { userId: null } // Inclui os tickets criados por usuários não logados
+                ]
+            }
         ]
     };
 
-    // Aplica filtros de estado
-    if (status === "ABERTO" || status === "FECHADO") whereCondition.status = status;
-
-    // Filtro de data
+    // Lista de datas
     const dateIntervals: Record<string, { gte: Date; lte: Date }> = {
         today: { gte: startOfDay(today), lte: endOfDay(today) },
         week:  { gte: startOfWeek(today), lte: endOfWeek(today) },
@@ -53,20 +53,30 @@ export default async function Dashboard({
         year:  { gte: startOfYear(today), lte: endOfYear(today) },
     };
 
+    // Filtro 
     if (date && dateIntervals[date as string]) {
-        whereCondition.created_at = dateIntervals[date as string];
+        whereCondition.AND.push({created_at: dateIntervals[date as string]});
     }
+
+    // Filtro de busca no SearchInput
+    if (search) {
+        whereCondition.AND.push({
+            OR: [
+                { name: { contains: search as string, mode: 'insensitive' } }, // Nome do Ticket
+                { customer: { name: { contains: search as string, mode: 'insensitive' } } } // NOME DO CLIENTE
+            ]
+        });
+    }
+
+    // Aplica filtros de estado
+    if (status === "ABERTO" || status === "FECHADO") whereCondition.AND.push({status: status});
 
     // Consulta ao banco de dados
     const tickets = await prismaClient.ticket.findMany({
         where: whereCondition,
-        include: {
-            customer: true
-        },
-        orderBy: {
-            created_at: "desc"
-        }
-    })
+        include: { customer: true },
+        orderBy: { created_at: "desc" }
+    });
 
     const isOpenCount = await prismaClient.ticket.count({
         where: {
@@ -79,7 +89,7 @@ export default async function Dashboard({
         <Container>
             <main className="mt-4 sm:mt-9 mb-2 max-w-7xl mx-auto px-2 sm:px-4">
         
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
                     
                     <div className="flex items-center gap-3 pl-2">
                         <FaTasks size={32} className="text-blue-600" />
