@@ -1,15 +1,19 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { CustomSelect, SelectOption } from "../select";
+import { useCallback, useTransition } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { CustomSelect } from "../select";
 import { RxCalendar } from "react-icons/rx";
 
 export type DateFilterValue = 'all' | 'today' | 'week' | 'month' | 'year';
 
 export function DateFilter() {
     const searchParams = useSearchParams();
-    const currentDate = searchParams.get("date") || "all";
+    const pathname = usePathname();
     const router = useRouter();
+    const [isPending, startTransition] = useTransition();
+    
+    const currentDate = searchParams.get("date") || "all";
 
     const options = [
         { value: "all", label: "Período Total" },
@@ -19,17 +23,21 @@ export function DateFilter() {
         { value: "year", label: "Este Ano"},
     ];
 
-    function handleSelect(value: string) {
-        const params = new URLSearchParams(searchParams.toString());
+    const handleSelect = useCallback((value: string) => {
+        startTransition(() => {
+            const params = new URLSearchParams(searchParams.toString());
+                
+            if (value === "all") {
+                params.delete("date");
+            } else {
+                params.set("date", value);
+            }
             
-        if (value === "all") {
-            params.delete("date");
-        } else {
-            params.set("date", value);
-        }
-        
-        router.push(`/dashboard?${params.toString()}`);
-    }
+            router.replace(`${pathname}?${params.toString()}`, {
+                scroll: false
+            });
+        });
+    }, [pathname, searchParams, router]);
 
     return (
         <CustomSelect 
