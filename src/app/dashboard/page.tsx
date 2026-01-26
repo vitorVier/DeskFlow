@@ -99,7 +99,7 @@ export default async function Dashboard({
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                        <SearchInput placeholder="Buscar tickets..." />
+                        <SearchInput placeholder="Nome do cliente..." />
                         
                         <div className="flex items-center gap-2">
                             <ButtonRefresh />

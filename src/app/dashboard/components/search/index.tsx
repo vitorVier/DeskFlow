@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export function SearchInput({ placeholder = 'Buscar tickets...' }) {
+interface SearchInputProps {
+    placeholder?: string;
+}
+
+export function SearchInput( { placeholder = "Buscar..." }: SearchInputProps ) {
     const router = useRouter();
     const searchParams = useSearchParams();
     
