@@ -6,18 +6,40 @@ import { redirect } from "next/navigation";
 import { CardCustomer } from "./components/card";
 import prismaClient from "@/lib/prisma"
 import { FiUserPlus, FiUsers } from "react-icons/fi";
+import { SearchInput } from "../components/search";
 
-export default async function Customer() {
+export default async function Customer({searchParams,
+} : {
+    searchParams: Promise<{ [ key: string ]: string | string[] | undefined }>
+}) {
     const session = await getServerSession(authOptions);
 
     if(!session || !session.user) {
         redirect('/')
     }
 
+    const whereCondition: any = {
+        AND: [
+            { userId: session.user.id }
+        ]
+    };
+
+    const { search } = await searchParams;
+
+    if (search) {
+        whereCondition.AND.push({
+            OR: [
+                { name: { contains: search as string, mode: 'insensitive' } },
+                { email: { contains: search as string, mode: 'insensitive' } },
+                { phone: { contains: search as string, mode: 'insensitive' } },
+                { address: { contains: search as string, mode: 'insensitive' } },
+            ]
+        });
+    }
+
     const customers = await prismaClient.customer.findMany({
-        where: {
-            userId: session.user.id
-        }
+        where: whereCondition,
+        orderBy: { created_at: 'asc' }
     })
 
     return (
@@ -38,6 +60,8 @@ export default async function Customer() {
                     </Link>
                 </div>
 
+                <SearchInput placeholder="Nome do cliente..."/>
+
                 {customers.length === 0 && (
                     <section className="bg-white rounded-xl border-2 border-dashed border-gray-200 p-12 flex flex-col items-center justify-center text-center">
                         <div className="bg-gray-50 p-4 rounded-full mb-4">
@@ -56,7 +80,7 @@ export default async function Customer() {
                     </section>
                 )}
 
-                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
                     {customers.map(customer => (
                         <CardCustomer 
                             key={customer.id} 

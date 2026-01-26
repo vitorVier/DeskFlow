@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface SearchInputProps {
     placeholder?: string;
@@ -10,6 +10,7 @@ interface SearchInputProps {
 export function SearchInput( { placeholder = "Buscar..." }: SearchInputProps ) {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const pathname = usePathname();
     
     const [value, setValue] = useState(searchParams.get("search") || "");
 
@@ -23,7 +24,7 @@ export function SearchInput( { placeholder = "Buscar..." }: SearchInputProps ) {
                 params.delete("search");
             }
 
-            router.push(`/dashboard?${params.toString()}`);
+            router.push(`${pathname}?${params.toString()}`);
         }, 500);
 
         return () => clearTimeout(timer);
