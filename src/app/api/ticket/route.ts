@@ -4,6 +4,30 @@ import { authOptions } from "@/lib/auth";
 import prismaClient from "@/lib/prisma";
 
 //http://localhost:3000/api/ticket
+export async function PATCH(request: Request) { 
+    const { id } = await request.json();
+    const findTicket = await prismaClient.ticket.findFirst({
+        where: {
+            id: id as string
+        }
+    })
+
+    if(!findTicket) return NextResponse.json({ message: "Failed update ticket"}, { status: 400 })
+
+    try{
+        const update = await prismaClient.ticket.update({
+            where: {
+                id: id as string
+            },
+            data: {
+                status: "FECHADO"
+            }
+        })
+
+        return NextResponse.json({ message: "Chamado atualizado com sucesso!" })
+    } catch { return }
+}
+
 export async function POST(request: Request) {
     const session = await getServerSession(authOptions)
 
