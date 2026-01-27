@@ -10,6 +10,7 @@
  */
 export type * from './models/Customer'
 export type * from './models/Ticket'
+export type * from './models/TicketComment'
 export type * from './models/Account'
 export type * from './models/Session'
 export type * from './models/User'

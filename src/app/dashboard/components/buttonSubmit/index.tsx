@@ -16,25 +16,56 @@ export function ButtonSubmit(
     const { pending } = useFormStatus();
     const isBlocked = pending || disabledManual;
 
+    const handleSubmit = async (formData: FormData) => {
+        const customerId = formData.get("customer");
+
+        if (!customerId || customerId === "") {
+            toast.error("Selecione um cliente antes de continuar!");
+            return; // Para a execução aqui
+        }
+
+        const toastId = toast.loading(`Cadastrando ${name.toLowerCase()}...`);
+        
+        try {
+            await action(formData);
+            
+            toast.success(`${name} cadastrado com sucesso!`, { id: toastId });
+            
+        } catch (err: any) {
+            // Redirecionamento do Next.js é considerado "sucesso"
+            if (err?.message === "NEXT_REDIRECT" || err?.digest?.includes("NEXT_REDIRECT")) {
+                toast.success(`${name} cadastrado com sucesso!`, { id: toastId });
+                return;
+            }
+            
+            // Erros específicos
+            const errorMessages: Record<string, string> = {
+                "email": "Este e-mail já está cadastrado!",
+                "phone": "Este telefone já está cadastrado!",
+                "Unique constraint": "Registro duplicado!",
+                "validation": "Preencha todos os campos obrigatórios!"
+            };
+            
+            // Procurar por erro específico
+            let errorMessage = `Erro ao cadastrar ${name.toLowerCase()}`;
+            
+            for (const [key, message] of Object.entries(errorMessages)) {
+                if (err?.message?.toLowerCase().includes(key.toLowerCase())) {
+                    errorMessage = message;
+                    break;
+                }
+            }
+            
+            console.error("Erro ao cadastrar:", err);
+            toast.error(errorMessage, { id: toastId });
+        }
+    };
+
     return (
         <button 
             type="submit"
-            // disabled={pending}
             disabled={isBlocked}
-            formAction={async (formData: FormData) => {
-                try {
-                    await action(formData);
-                    toast.success(`${name} criado com sucesso!`);
-                } catch (err: any) {
-                    if (err.message === "NEXT_REDIRECT") {
-                        toast.success(`${name} cadastrado com sucesso!`);
-                        return; 
-                    }
-                    
-                    toast(`Verifique se o e-mail do cliente já está na sua base de dados`);
-                    toast.error(`Erro ao criar o ${name.toLowerCase()}.`);
-                }
-            }}
+            formAction={handleSubmit}
             className={`
                 flex items-center justify-center gap-2 w-full font-bold h-12 rounded-lg mt-4 transition-all
                 ${isBlocked 

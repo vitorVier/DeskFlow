@@ -41,6 +41,22 @@ model Ticket {
 
   userId String?
   User User? @relation(fields: [userId], references: [id])
+
+  comments TicketComment[]
+}
+
+model TicketComment {
+  id        String   @id @default(cuid())
+  message   String
+  created_at DateTime @default(now())
+  ticketId  String
+  userId    String
+  
+  // Relações
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("comments")
 }
 
 model Account {
@@ -83,6 +99,7 @@ model User {
   sessions      Session[]
   tickets Ticket[]
   customers Customer[]
+  comments TicketComment[]
  
   @@map("users")
 }

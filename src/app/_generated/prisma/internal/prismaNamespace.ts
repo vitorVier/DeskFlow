@@ -386,6 +386,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Customer: 'Customer',
   Ticket: 'Ticket',
+  TicketComment: 'TicketComment',
   Account: 'Account',
   Session: 'Session',
   User: 'User',
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "customer" | "ticket" | "account" | "session" | "user" | "verificationToken"
+    modelProps: "customer" | "ticket" | "ticketComment" | "account" | "session" | "user" | "verificationToken"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -554,6 +555,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TicketCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TicketCountAggregateOutputType> | number
+        }
+      }
+    }
+    TicketComment: {
+      payload: Prisma.$TicketCommentPayload<ExtArgs>
+      fields: Prisma.TicketCommentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TicketCommentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketCommentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TicketCommentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketCommentPayload>
+        }
+        findFirst: {
+          args: Prisma.TicketCommentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketCommentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TicketCommentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketCommentPayload>
+        }
+        findMany: {
+          args: Prisma.TicketCommentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketCommentPayload>[]
+        }
+        create: {
+          args: Prisma.TicketCommentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketCommentPayload>
+        }
+        createMany: {
+          args: Prisma.TicketCommentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TicketCommentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketCommentPayload>[]
+        }
+        delete: {
+          args: Prisma.TicketCommentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketCommentPayload>
+        }
+        update: {
+          args: Prisma.TicketCommentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketCommentPayload>
+        }
+        deleteMany: {
+          args: Prisma.TicketCommentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TicketCommentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TicketCommentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketCommentPayload>[]
+        }
+        upsert: {
+          args: Prisma.TicketCommentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TicketCommentPayload>
+        }
+        aggregate: {
+          args: Prisma.TicketCommentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTicketComment>
+        }
+        groupBy: {
+          args: Prisma.TicketCommentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TicketCommentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TicketCommentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TicketCommentCountAggregateOutputType> | number
         }
       }
     }
@@ -920,6 +995,17 @@ export const TicketScalarFieldEnum = {
 export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
 
 
+export const TicketCommentScalarFieldEnum = {
+  id: 'id',
+  message: 'message',
+  created_at: 'created_at',
+  ticketId: 'ticketId',
+  userId: 'userId'
+} as const
+
+export type TicketCommentScalarFieldEnum = (typeof TicketCommentScalarFieldEnum)[keyof typeof TicketCommentScalarFieldEnum]
+
+
 export const AccountScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1150,6 +1236,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   customer?: Prisma.CustomerOmit
   ticket?: Prisma.TicketOmit
+  ticketComment?: Prisma.TicketCommentOmit
   account?: Prisma.AccountOmit
   session?: Prisma.SessionOmit
   user?: Prisma.UserOmit

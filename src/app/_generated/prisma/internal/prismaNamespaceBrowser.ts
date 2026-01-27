@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Customer: 'Customer',
   Ticket: 'Ticket',
+  TicketComment: 'TicketComment',
   Account: 'Account',
   Session: 'Session',
   User: 'User',
@@ -101,6 +102,17 @@ export const TicketScalarFieldEnum = {
 } as const
 
 export type TicketScalarFieldEnum = (typeof TicketScalarFieldEnum)[keyof typeof TicketScalarFieldEnum]
+
+
+export const TicketCommentScalarFieldEnum = {
+  id: 'id',
+  message: 'message',
+  created_at: 'created_at',
+  ticketId: 'ticketId',
+  userId: 'userId'
+} as const
+
+export type TicketCommentScalarFieldEnum = (typeof TicketCommentScalarFieldEnum)[keyof typeof TicketCommentScalarFieldEnum]
 
 
 export const AccountScalarFieldEnum = {
