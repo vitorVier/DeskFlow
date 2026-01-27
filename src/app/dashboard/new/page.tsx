@@ -110,6 +110,7 @@ export default async function NewTicket() {
                             name={'ticket'}
                             action={handleRegisterTicket}
                             disabledManual={customers.length === 0}
+                            requireCustomer={true}
                         />
                     </form>
                 </section>

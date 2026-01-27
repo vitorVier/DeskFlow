@@ -8,20 +8,27 @@ interface ButtonProps {
   action: (formData: FormData) => Promise<void>;
   name: string;
   disabledManual?: boolean;
+  requireCustomer?: boolean; // Nova prop opcional
 }
 
-export function ButtonSubmit(
-    { action, name, disabledManual }: ButtonProps
-) {
+export function ButtonSubmit({ 
+    action, 
+    name, 
+    disabledManual,
+    requireCustomer = false // Padrão é false
+}: ButtonProps) {
     const { pending } = useFormStatus();
     const isBlocked = pending || disabledManual;
 
     const handleSubmit = async (formData: FormData) => {
-        const customerId = formData.get("customer");
-
-        if (!customerId || customerId === "") {
-            toast.error("Selecione um cliente antes de continuar!");
-            return; // Para a execução aqui
+        // VALIDAÇÃO CONDICIONAL: Só valida cliente se requireCustomer for true
+        if (requireCustomer) {
+            const customerId = formData.get("customer");
+            
+            if (!customerId || customerId === "") {
+                toast.error("Selecione um cliente antes de continuar!");
+                return;
+            }
         }
 
         const toastId = toast.loading(`Cadastrando ${name.toLowerCase()}...`);
@@ -69,8 +76,8 @@ export function ButtonSubmit(
             className={`
                 flex items-center justify-center gap-2 w-full font-bold h-12 rounded-lg mt-4 transition-all
                 ${isBlocked 
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed select-none" // Cinza se estiver bloqueado
-                    : "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer active:scale-[0.98]" // Azul se estiver liberado
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed select-none"
+                    : "bg-blue-600 hover:bg-blue-700 text-white cursor-pointer active:scale-[0.98]"
                 }
             `}
         >

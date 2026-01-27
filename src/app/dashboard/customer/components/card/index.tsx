@@ -28,8 +28,8 @@ export function CardCustomer({ customer }: { customer: CustomerProps }) {
     } 
 
     return (
-        <Link href={`/dashboard/customer/${customer.name}/tickets`}>
-            <article className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative group overflow-hidden">
+        <article className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between relative group overflow-hidden">
+            <Link href={`/dashboard/customer/${customer.name}/tickets`}>
                 <div className="absolute left-0 top-0 h-full w-1 bg-blue-500"></div>
 
                 <div className="flex flex-col gap-4">
@@ -57,15 +57,15 @@ export function CardCustomer({ customer }: { customer: CustomerProps }) {
                         </div>
                     </div>
                 </div>
+            </Link>
 
-                <button 
-                    className="absolute top-4 right-4 p-2 text-gray-300 bg-transparent rounded-lg hover:bg-red-50 hover:text-red-500 transition-colors duration-200 cursor-pointer"
-                    onClick={handleDeleteCustomer}
-                    title="Excluir cliente"
-                > 
-                    <FiTrash2 size={18} />
-                </button>
-            </article>
-        </Link>
+            <button 
+                className="absolute top-4 right-4 p-2 text-gray-300 bg-transparent rounded-lg hover:bg-red-50 hover:text-red-500 transition-colors duration-200 cursor-pointer"
+                onClick={handleDeleteCustomer}
+                title="Excluir cliente"
+            > 
+                <FiTrash2 size={18} />
+            </button>
+        </article>
     )
 }
