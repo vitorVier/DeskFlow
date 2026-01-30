@@ -4,9 +4,9 @@ import { getServerSession } from "next-auth"
 import { NextResponse } from "next/server"
 
 interface ParamsProps {
-    params: {
+    params: Promise<{
         ticketId: string;
-    }
+    }>
 }
 
 // Rota para criar andamentos de um ticket existente
@@ -45,7 +45,7 @@ export async function PATCH(request: Request, { params }: ParamsProps) {
 // Rota para obter os andamentos de um ticket existente
 export async function GET(request: Request, { params }: ParamsProps) {
     const session = await getServerSession(authOptions);
-    const { ticketId } = params;
+    const { ticketId } = await params;
 
     if(!session || !session.user) {
         return NextResponse.json({ error: "Unauthorized"}, { status: 401 })
