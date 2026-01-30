@@ -2,14 +2,15 @@
 
 import { ModalContext } from "@/providers/modal";
 import { useSession } from "next-auth/react";
-import { MouseEvent, useContext, useEffect, useRef, useState } from "react";
+import { MouseEvent, useCallback, useContext, useEffect, useRef, useState, useTransition } from "react";
 import { IoClose, IoPaperPlaneOutline } from "react-icons/io5";
-import { InputClientData } from "./components/inputClientData";
 import { FiClock } from "react-icons/fi";
 import { api } from "@/lib/api";
 import toast from "react-hot-toast";
 import { getTicketComments } from "./modalServer";
 import { StatusFilter } from "@/app/dashboard/components/statusFilter";
+import { CustomSelect, SelectOption } from "@/app/dashboard/components/select";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface TicketNote {
     id: string;
@@ -30,6 +31,7 @@ export function ModalTicket() {
     // Estado para a lista de andamentos (Simulação)
     const [notes, setNotes] = useState<TicketNote[]>([]);
 
+    // Carrega os andamentos quando o componente é montado ou atualizado
     useEffect(() => {
         async function loadComments() {
             if (ticket?.ticket.id) {
@@ -84,6 +86,36 @@ export function ModalTicket() {
         }
     }
 
+    // Status Filter Lógica
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const [isPending, startTransition] = useTransition();
+
+    const currentStatus = searchParams.get("status") || "all";
+
+    const options: SelectOption[] = [
+        { value: "ABERTO", label: "Aberto", color: "bg-blue-600" },
+        { value: "EM ANDAMENTO", label: "Em Andamento", color: "bg-orange-500" },
+        { value: "RESOLVIDO", label: "Resolvido", color: "bg-emerald-600" },
+    ];
+
+    const handleSelect = useCallback((value: string) => {
+        startTransition(() => {
+            const params = new URLSearchParams(searchParams.toString());
+            
+            if (value === "all") {
+                params.delete("status");
+            } else {
+                params.set("status", value);
+            }
+            
+            router.replace(`${pathname}?${params.toString()}`, {
+                scroll: false
+            });
+        });
+    }, [pathname, searchParams, router]);
+
     return (
         <section
             className="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm pt-20 flex items-center justify-center px-2 sm:px-4"
@@ -127,7 +159,11 @@ export function ModalTicket() {
                         <div className="flex items-center gap-3 self-start md:self-center">
                             {/* O StatusFilter aqui assume o papel de badge interativo */}
                             <div className="scale-105 origin-right">
-                                <StatusFilter />
+                                <CustomSelect 
+                                    options={options} 
+                                    currentValue={currentStatus} 
+                                    onSelect={handleSelect} 
+                                />
                             </div>
                             
                             <button
