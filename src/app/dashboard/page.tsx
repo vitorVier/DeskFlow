@@ -78,13 +78,6 @@ export default async function Dashboard({
         orderBy: { created_at: "desc" }
     });
 
-    const isOpenCount = await prismaClient.ticket.count({
-        where: {
-            userId: session.user.id,
-            status: "ABERTO"
-        }
-    });
-
     return(
         <Container>
             <main className="mt-4 sm:mt-9 mb-2 max-w-7xl mx-auto px-2 sm:px-4">
