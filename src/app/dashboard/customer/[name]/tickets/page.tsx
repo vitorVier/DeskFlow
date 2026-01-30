@@ -74,7 +74,7 @@ export default async function TicketsPage({
     }
 
     // Aplica filtros de estado
-    if (status === "ABERTO" || status === "FECHADO") whereCondition.AND.push({status: status});
+    if (status === "ABERTO" || status === "EM ANDAMENTO" || status === "RESOLVIDO") whereCondition.AND.push({status: status});
 
     // Consulta ao banco de dados
     const tickets = await prismaClient.ticket.findMany({

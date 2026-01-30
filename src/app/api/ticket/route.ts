@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import prismaClient from "@/lib/prisma";
 
 //http://localhost:3000/api/ticket
+
+// Rota para criar tickets e atualizar o status do mesmo
 export async function PATCH(request: Request) { 
     const { id } = await request.json();
     const findTicket = await prismaClient.ticket.findFirst({
@@ -20,7 +22,7 @@ export async function PATCH(request: Request) {
                 id: id as string
             },
             data: {
-                status: "FECHADO"
+                status: "RESOLVIDO"
             }
         })
 
@@ -28,6 +30,7 @@ export async function PATCH(request: Request) {
     } catch { return }
 }
 
+// Rota para criar um novo ticket e associá-lo a um cliente existente
 export async function POST(request: Request) {
     const session = await getServerSession(authOptions)
 
@@ -60,4 +63,4 @@ export async function POST(request: Request) {
     } catch(err) {
         return NextResponse.json({ error: "Filed create new ticket!" }, { status: 500 })
     }
-}   
+}

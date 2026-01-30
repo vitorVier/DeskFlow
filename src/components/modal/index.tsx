@@ -2,15 +2,17 @@
 
 import { ModalContext } from "@/providers/modal";
 import { useSession } from "next-auth/react";
-import { MouseEvent, useContext, useRef, useState } from "react";
-import { IoClose, IoPaperPlaneOutline } from "react-icons/io5"; // Adicionei o ícone de enviar
+import { MouseEvent, useContext, useEffect, useRef, useState } from "react";
+import { IoClose, IoPaperPlaneOutline } from "react-icons/io5";
 import { InputClientData } from "./components/inputClientData";
-import { FiClock } from "react-icons/fi"; // Ícone de relógio para datas
+import { FiClock } from "react-icons/fi";
+import { api } from "@/lib/api";
+import toast from "react-hot-toast";
+import { getTicketComments } from "./modalServer";
 
-// Interface simples para simular um andamento (depois virá do seu banco)
 interface TicketNote {
     id: string;
-    text: string;
+    progressText: string;
     date: Date;
     author: string;
 }
@@ -22,12 +24,26 @@ export function ModalTicket() {
 
     // Estado para o texto do novo andamento
     const [noteText, setNoteText] = useState("");
+    const [ isLoading, setIsLoading ] = useState(false)
     
     // Estado para a lista de andamentos (Simulação)
-    const [notes, setNotes] = useState<TicketNote[]>([
-        // Exemplo de dado fictício para visualizar
-        { id: '1', text: 'Ticket aberto e aguardando análise técnica.', date: new Date(), author: 'Sistema' }
-    ]);
+    const [notes, setNotes] = useState<TicketNote[]>([]);
+
+    useEffect(() => {
+        async function loadComments() {
+            if (ticket?.ticket.id) {
+                try {
+                    // Busca andamentos no servidor
+                    const dbNotes = await getTicketComments(ticket.ticket.id);
+                    setNotes(dbNotes);
+                } catch (error) {
+                    console.error("Erro ao carregar comentários", error);
+                    toast.error("Falha ao carregar histórico");
+                }
+            }
+        }
+        loadComments();
+    }, [ticket]);
 
     const handleModalClick = (e: MouseEvent<HTMLDivElement>) => {
         if (modalRef.current && !modalRef.current?.contains(e.target as Node)) {
@@ -35,19 +51,36 @@ export function ModalTicket() {
         }
     }
 
-    // Função para adicionar novo andamento (apenas visual por enquanto)
-    const handleAddNote = () => {
+    // Função para adicionar novo andamento ao ticket
+    async function handleAddNote() {
         if (noteText.trim() === "") return;
+        setIsLoading(true);
 
-        const newNote: TicketNote = {
-            id: Math.random().toString(),
-            text: noteText,
-            date: new Date(),
-            author: session?.user?.name || "Atendente"
-        };
+        // Adiciona o andamento ao banco de dados (apenas se houver texto)
+        try {
+            const response = await api.patch(`/api/ticket/${ticket?.ticket.id}/progress`, {
+                note: noteText,
+            });
 
-        setNotes([newNote, ...notes]); // Adiciona no topo da lista
-        setNoteText(""); // Limpa o campo
+            const data = response.data;
+
+            const newNote: TicketNote = {
+                id: data.id,
+                progressText: data.message,
+                date: new Date(data.created_at),
+                author: data.user?.name || session?.user?.name || "Sistema"
+            };
+
+            setNotes((prev) => [newNote, ...prev]); // Adiciona no topo da lista
+            setNoteText(""); // Limpa o campo de texto
+            toast.success("Andamento registrado!");
+
+        } catch(err: any){
+            toast.error(err?.response?.data?.message || "Erro ao adicionar andamento!");
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -122,24 +155,26 @@ export function ModalTicket() {
 
                     <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                         {/* Input de Novo Andamento */}
-                        <div className="flex flex-col gap-2 mb-6">
-                            <label className="text-xs font-bold text-gray-500 uppercase">Novo Andamento</label>
-                            <div className="relative">
-                                <textarea
-                                    value={noteText}
-                                    onChange={(e) => setNoteText(e.target.value)}
-                                    placeholder="Descreva a atualização deste ticket..."
-                                    className="w-full min-h-20 p-3 pr-12 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-y"
-                                ></textarea>
-                                <button
-                                    onClick={handleAddNote}
-                                    className="absolute bottom-3 right-3 p-2 cursor-pointer bg-blue-600 hover:bg-blue-500 text-white rounded-full transition-all shadow-sm active:scale-95"
-                                    title="Salvar andamento"
-                                >
-                                    <IoPaperPlaneOutline size={18} className="mr-0.5 ml-px mt-px"/>
-                                </button>
+                        {ticket?.ticket.status !== "FECHADO" && (
+                            <div className="flex flex-col gap-2 mb-6">
+                                <label className="text-xs font-bold text-gray-500 uppercase">Novo Andamento</label>
+                                <div className="relative">
+                                    <textarea
+                                        value={noteText}
+                                        onChange={(e) => setNoteText(e.target.value)}
+                                        placeholder="Descreva a atualização deste ticket..."
+                                        className="w-full min-h-20 p-3 pr-12 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm resize-y"
+                                    ></textarea>
+                                    <button
+                                        onClick={handleAddNote}
+                                        className="absolute bottom-3 right-3 p-2 cursor-pointer bg-blue-600 hover:bg-blue-500 text-white rounded-full transition-all shadow-sm active:scale-95"
+                                        title="Salvar andamento"
+                                    >
+                                        <IoPaperPlaneOutline size={18} className="mr-0.5 ml-px mt-px"/>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         {/* Lista de Andamentos Anteriores */}
                         <div className="space-y-4">
@@ -158,7 +193,7 @@ export function ModalTicket() {
                                                     <span>{note.date.toLocaleDateString()} às {note.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                                                 </div>
                                             </div>
-                                            <p className="text-sm text-gray-600 leading-snug">{note.text}</p>
+                                            <p className="text-sm text-gray-600 leading-snug">{note.progressText}</p>
                                         </div>
                                     </div>
                                 ))

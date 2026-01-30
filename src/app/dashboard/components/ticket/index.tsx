@@ -60,9 +60,11 @@ export function TicketItem({ customer, ticket }: TicketItemProps) {
                 <td className="text-left py-4">
                     <span 
                         className={`text-xs font-bold px-3 py-1.5 rounded-full border ${
-                            ticket.status === 'FECHADO' 
-                            ? 'bg-red-100 text-red-600 border-red-200' 
-                            : 'bg-green-100 text-green-600 border-green-200'
+                            ticket.status === 'ABERTO' 
+                            ? 'bg-blue-100 text-blue-700 border-blue-200' 
+                            : ticket.status === 'EM ATENDIMENTO'
+                            ? 'bg-orange-100 text-orange-700 border-orange-200'
+                            : 'bg-emerald-100 text-emerald-700 border-emerald-200' // Para o RESOLVIDO
                         }`}
                     >
                         {ticket.status}

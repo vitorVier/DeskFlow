@@ -11,19 +11,20 @@ export function StatusFilter() {
     const searchParams = useSearchParams();
     const [isPending, startTransition] = useTransition();
 
-    const currentStatus = searchParams.get("status") || "TODOS";
+    const currentStatus = searchParams.get("status") || "all";
 
     const options: SelectOption[] = [
-        { value: "TODOS", label: "Todos os chamados", color: "bg-blue-500" },
-        { value: "ABERTO", label: "Abertos", color: "bg-green-500" },
-        { value: "FECHADO", label: "Fechados", color: "bg-red-500" },
+        { value: "all", label: "Todos os chamados", color: "bg-slate-600" },
+        { value: "ABERTO", label: "Abertos", color: "bg-blue-600" },
+        { value: "EM ANDAMENTO", label: "Em Andamento", color: "bg-orange-500" },
+        { value: "RESOLVIDO", label: "Resolvidos", color: "bg-emerald-600" },
     ];
 
     const handleSelect = useCallback((value: string) => {
         startTransition(() => {
             const params = new URLSearchParams(searchParams.toString());
             
-            if (value === "TODOS") {
+            if (value === "all") {
                 params.delete("status");
             } else {
                 params.set("status", value);

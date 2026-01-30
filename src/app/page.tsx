@@ -177,7 +177,7 @@ export default async function Home() {
     }),
     prismaClient.ticket.count({ 
       where: { 
-        status: "FECHADO",
+        status: "RESOLVIDO",
         updated_at: { gte: today } 
       } 
     }),
