@@ -155,7 +155,7 @@ export function ModalTicket() {
 
                     <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                         {/* Input de Novo Andamento */}
-                        {ticket?.ticket.status !== "FECHADO" && (
+                        {ticket?.ticket.status !== "RESOLVIDO" && (
                             <div className="flex flex-col gap-2 mb-6">
                                 <label className="text-xs font-bold text-gray-500 uppercase">Novo Andamento</label>
                                 <div className="relative">
