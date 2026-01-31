@@ -74,96 +74,78 @@ export default async function Dashboard({
 
     return(
         <Container>
-            <main className="mt-4 sm:mt-9 mb-2 max-w-7xl mx-auto px-2 sm:px-4">
-        
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-5">
-                    
-                    <div className="flex items-center gap-2 pl-1">
-                        <FaTasks className="text-blue-600 w-6 h-6 sm:w-8 sm:h-8" />
+            <main className="mt-6 mb-8 max-w-7xl mx-auto px-4">
+                {/* Cabeçalho */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-gray-100 pb-6">
+                    <div className="flex items-center gap-4">
+                        <div className="relative group">
+                            <div className="absolute -inset-1 bg-linear-to-r from-blue-400 to-indigo-400 rounded-2xl blur opacity-10 group-hover:opacity-25 transition duration-1000"></div>
+                            
+                            {/* Container Principal */}
+                            <div className="relative w-12 h-12 flex items-center justify-center bg-white rounded-2xl border border-gray-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-xl">
+                                <div className="absolute inset-0.75 rounded-[13px] bg-linear-to-br from-gray-50 to-white border border-white"></div>
+                                
+                                <FaTasks size={20} className="relative text-blue-600 drop-shadow-[0_2px_2px_rgba(37,99,235,0.2)]" />
+                            </div>
+                        </div>
                         
-                        <h1 className="text-xl sm:text-3xl font-extrabold text-gray-800 tracking-tight">
-                            Meus Tickets
-                        </h1>
+                        <div className="flex flex-col">
+                            <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight leading-none">
+                                Central de Chamados
+                            </h1>
+                            <p className="text-xs text-gray-400 font-medium mt-1 uppercase tracking-widest">
+                                Gerencie o suporte em tempo real
+                            </p>
+                        </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3 w-full sm:w-auto">
-                        <div className="w-full sm:w-auto">
-                            <SearchInput placeholder="Nome do cliente..." />
-                        </div>
-                        
-                        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-start">
-                            <ButtonRefresh />
-                            
-                            {/* Botão mais compacto no mobile */}
-                            <Link 
-                                href="/dashboard/new"
-                                className="bg-blue-600 hover:bg-blue-700 h-10 px-4 sm:px-6 rounded-lg text-white font-semibold transition-all shadow-md active:scale-95 whitespace-nowrap text-sm sm:text-base flex items-center justify-center flex-1 sm:flex-none"
-                            >
-                                <IoMdAdd size={18} className="mr-1 sm:hidden" />
-                                <span className="sm:hidden">Novo</span>
-                                <span className="hidden sm:inline">Novo ticket</span>
-                            </Link>
-                        </div>
+                    <div className="flex items-center gap-3">
+                        <SearchInput placeholder="Buscar chamado..." />
+                        <ButtonRefresh />
+                        <Link 
+                            href="/dashboard/new"
+                            className="group bg-gray-900 hover:bg-blue-600 px-5 py-2.5 rounded-2xl text-white text-[13px] font-bold transition-all duration-300 shadow-xl shadow-gray-200 hover:shadow-blue-200 active:scale-95 flex items-center gap-2"
+                        >
+                            <IoMdAdd size={18} className="group-hover:rotate-90 transition-transform" />
+                            <span className="hidden sm:inline">Novo Ticket</span>
+                            <span className="sm:hidden">Novo</span>
+                        </Link>
                     </div>
                 </div>
 
-                {/* Filtros compactos */}
-                <section className="flex flex-wrap items-center gap-2 mb-4 sm:mb-6">
-                    <div className="flex-1 min-w-30 sm:flex-none">
-                        <StatusFilter />
-                    </div>
-
-                    <div className="flex-1 min-w-30 sm:flex-none">
-                        <DateFilter />
-                    </div>
-
-                    {/* Contador menor */}
-                    <div className="flex items-center justify-start gap-2 bg-white border border-gray-200 rounded-lg px-3 h-10 shadow-sm hover:border-gray-300 transition-all cursor-pointer ml-auto">
-                        <IoTicketOutline size={18} className="text-blue-600" />
-                        <p className="text-xs sm:text-sm text-gray-700">
-                            <span className="font-bold">{tickets.length}</span> tickets
-                        </p>
+                {/* Seção de Filtros mais "Clean" */}
+                <section className="flex flex-wrap items-center gap-3 mb-6">
+                    <StatusFilter />
+                    <DateFilter />
+                    
+                    <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl ml-auto transition-all hover:border-gray-300">
+                        <IoTicketOutline size={16} className="text-blue-500" />
+                        <span className="text-[13px] font-bold text-gray-600">
+                            {tickets.length} <span className="font-medium text-gray-400">Total</span>
+                        </span>
                     </div>
                 </section>
 
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-gray-200">
-                        <table className="w-full min-w-full">
+                {/* Tabela com cara de Card */}
+                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden transition-all">
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
                             <thead>
-                                <tr className="bg-gray-50 border-b border-gray-100">
-                                    {/* Padding reduzido (py-3) e fonte menor (text-[11px]) */}
-                                    <th className="font-bold text-gray-400 text-[10px] sm:text-xs uppercase tracking-wider pl-4 py-3 text-left">
-                                        CLIENTE
-                                    </th>
-                                    <th className="font-bold text-gray-400 text-[10px] sm:text-xs uppercase tracking-wider hidden md:table-cell py-3 text-left">
-                                        DATA
-                                    </th>
-                                    <th className="font-bold text-gray-400 text-[10px] sm:text-xs uppercase tracking-wider py-3 text-left">
-                                        STATUS
-                                    </th>
-                                    <th className="font-bold text-gray-400 text-[10px] sm:text-xs uppercase tracking-wider pr-4 py-3 text-right">
-                                        AÇÕES
-                                    </th>
+                                <tr className="bg-gray-50/50 border-b border-gray-100">
+                                    <th className="font-bold text-gray-400 text-[11px] uppercase tracking-widest pl-6 py-4 text-left">Cliente</th>
+                                    <th className="font-bold text-gray-400 text-[11px] uppercase tracking-widest py-4 text-left hidden md:table-cell">Abertura</th>
+                                    <th className="font-bold text-gray-400 text-[11px] uppercase tracking-widest py-4 text-left">Status</th>
+                                    <th className="font-bold text-gray-400 text-[11px] uppercase tracking-widest pr-6 py-4 text-right">Gerenciar</th>
                                 </tr>
                             </thead>
 
                             <tbody className="divide-y divide-gray-50">
                                 {tickets.map(ticket => (
-                                    <TicketItem 
-                                        key={ticket.id} 
-                                        customer={ticket.customer} 
-                                        ticket={ticket} 
-                                    />
+                                    <TicketItem key={ticket.id} customer={ticket.customer} ticket={ticket} />
                                 ))}
                             </tbody>
                         </table>
                     </div>
-
-                    {tickets.length === 0 && (
-                        <div className="py-12 text-center">
-                            <h1 className="text-gray-400 font-medium text-sm">Nenhum ticket encontrado!</h1>
-                        </div>
-                    )}
                 </div>
             </main>
         </Container>

@@ -47,9 +47,14 @@ export default async function Customer({searchParams,
             <main className="mt-6 mb-8 max-w-7xl mx-auto px-4">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-8 border-b border-gray-100 pb-6">
                     <div className="flex items-center gap-4">
-                        {/* Ícone com fundo Glassmorphism leve */}
-                        <div className="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-2xl border border-gray-100 text-blue-600 shadow-inner">
-                            <FiUsers size={22} />
+                        <div className="relative group">
+                            <div className="absolute -inset-1 bg-linear-to-r from-blue-400 to-indigo-400 rounded-2xl blur opacity-10 group-hover:opacity-20 transition duration-1000"></div>
+                            
+                            {/* Container Principal */}
+                            <div className="relative w-12 h-12 flex items-center justify-center bg-white rounded-2xl border border-gray-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-xl">
+                                <div className="absolute inset-0.75 rounded-[13px] bg-linear-to-br from-gray-50 to-white border border-white"></div>
+                                <FiUsers size={20} className="relative text-blue-600 drop-shadow-[0_2px_2px_rgba(37,99,235,0.15)]" />
+                            </div>
                         </div>
                         
                         <div className="flex flex-col">

@@ -9,6 +9,13 @@ const config = {
   ],
   theme: {
     extend: {
+      animation: {
+        gradient: 'gradient 3s ease infinite',
+        float: 'float 6s ease-in-out infinite',
+        'float-delayed': 'float-delayed 8s ease-in-out infinite',
+        marquee: 'marquee 5s linear infinite',
+      },
+      
       keyframes: {
         gradient: {
           '0%, 100%': { backgroundPosition: '0% 50%' },
@@ -22,11 +29,10 @@ const config = {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-15px)' },
         },
-      },
-      animation: {
-        gradient: 'gradient 3s ease infinite',
-        float: 'float 6s ease-in-out infinite',
-        'float-delayed': 'float-delayed 8s ease-in-out infinite',
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' }, // Ajuste conforme a necessidade
+        },
       },
     },
   }

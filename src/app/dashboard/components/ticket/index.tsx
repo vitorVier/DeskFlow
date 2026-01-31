@@ -44,21 +44,34 @@ export function TicketItem({ customer, ticket }: TicketItemProps) {
         <>
             <tr
                 onClick={handleOpenModal}
-                className="border-b border-gray-100 last:border-b-0 bg-white hover:bg-blue-50/30 transition-all duration-300 group cursor-pointer"
+                className="border-b border-gray-50 last:border-b-0 bg-white hover:bg-blue-50/20 transition-all duration-300 group cursor-pointer"
             >
-                <td className="text-left pl-4 py-3">
-                    <span className="font-semibold text-gray-700 text-sm sm:text-base block truncate max-w-35 sm:max-w-xs">
-                        {customer?.name}
-                    </span>
+                <td className="pl-6 py-4">
+                    <div className="flex items-center gap-3 max-w-37.5 sm:max-w-xs">
+                        {/* Avatar mantido */}
+                        <div className="w-8 h-8 shrink-0 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-[10px] font-bold border border-blue-100">
+                            {customer?.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}
+                        </div>
+
+                        {/* Container do Nome com Rolagem Automática */}
+                        <div className="relative flex-1 overflow-hidden whitespace-nowrap group/name">
+                            <span className="inline-block font-bold text-gray-700 text-sm group-hover/name:animate-marquee transition-colors">
+                                {customer?.name}
+                            </span>
+                            
+                            {/* Gradiente sutil para indicar que tem mais texto (opcional) */}
+                            <div className="absolute right-0 top-0 h-full w-4 bg-linear-to-l from-white group-hover:from-transparent transition-all"></div>
+                        </div>
+                    </div>
                 </td>
 
-                <td className="text-left hidden sm:table-cell py-3 text-gray-500 text-xs sm:text-sm">
+                <td className="hidden md:table-cell py-4 text-gray-400 text-[13px] font-medium">
                     {ticket?.created_at?.toLocaleDateString("pt-br")}
                 </td>
 
-                <td className="text-left py-3">
+                <td className="py-4">
                     <span 
-                        className={`text-xs font-bold px-3 py-1.5 rounded-full border ${
+                        className={`text-xs font-bold px-3 py-1 rounded-full border ${
                             ticket.status === 'ABERTO' 
                             ? 'bg-blue-100 text-blue-700 border-blue-200' 
                             : ticket.status === 'EM ATENDIMENTO'
@@ -70,28 +83,13 @@ export function TicketItem({ customer, ticket }: TicketItemProps) {
                     </span>
                 </td>
 
-                <td className="text-right pr-4 py-3">
-                    <div className="flex items-center justify-end gap-1 sm:gap-2">
-                        <button 
-                            className="cursor-pointer p-1.5 sm:p-2 rounded-lg hover:bg-blue-100 text-blue-500 transition-colors duration-200" 
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleOpenModal();
-                            }}
-                            title="Ver detalhes"
-                        >
-                            <FiFile className="w-4 h-4 sm:w-5 sm:h-5" />
+                <td className="pr-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button className="cursor-pointer p-1.5 sm:p-2 rounded-lg hover:bg-blue-100 text-blue-500 transition-colors duration-200">
+                            <FiFile size={18} />
                         </button>
-
-                        <button 
-                            className="cursor-pointer p-1.5 sm:p-2 rounded-lg hover:bg-green-100 text-gray-400 hover:text-green-600 transition-all duration-200" 
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleChangeStatus();
-                            }}
-                            title="Mudar status"
-                        >
-                            <FiCheckSquare className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <button className="cursor-pointer p-1.5 sm:p-2 rounded-lg hover:bg-green-100 text-gray-400 hover:text-green-600 transition-all duration-200">
+                            <FiCheckSquare size={18} />
                         </button>
                     </div>
                 </td>
