@@ -123,7 +123,7 @@ export function ModalTicket() {
         >
             <div
                 ref={modalRef}
-                className="bg-white shadow-2xl w-full sm:max-w-4xl md:max-w-5xl mt-16 h-[92vh] sm:h-auto sm:max-h-[85vh] rounded-t-2xl sm:rounded-xl overflow-hidden transform transition-all flex flex-col"
+                className="bg-white shadow-2xl w-full mt-16 sm:max-w-4xl md:max-w-5xl h-[92vh] sm:h-auto sm:max-h-[85vh] rounded-t-2xl sm:rounded-xl overflow-hidden transform transition-all flex flex-col"
             >
                 {/* --- HEADER --- */}
                 <div className="relative p-5 md:p-6 bg-white border-b border-gray-100 shrink-0">
@@ -136,7 +136,7 @@ export function ModalTicket() {
                                     <span className="flex h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
                                     Protocolo #{ticket?.ticket.id?.slice(-6)}
                                 </div>
-                                <h1 className="text-lg md:text-2xl font-bold text-gray-900 tracking-tight leading-tight break-words">
+                                <h1 className="text-lg md:text-2xl font-bold text-gray-900 tracking-tight leading-tight wrap-break-words">
                                     {ticket?.ticket.name}
                                 </h1>
                             </div>
@@ -160,7 +160,7 @@ export function ModalTicket() {
                                         {ticket?.ticket.userId ? session?.user?.name : ticket?.customer?.name}
                                     </span>
                                 </div>
-                                <div className="h-3 w-[1px] bg-gray-200 hidden md:block"></div>
+                                <div className="h-3 w-px bg-gray-200 hidden md:block"></div>
                                 <div className="flex items-center gap-1.5 text-xs text-gray-400">
                                     <FiClock size={12} />
                                     <span>{new Date(ticket?.ticket.created_at || "").toLocaleDateString("pt-br")}</span>
@@ -227,7 +227,7 @@ export function ModalTicket() {
                                     value={noteText}
                                     onChange={(e) => setNoteText(e.target.value)}
                                     placeholder="Adicionar nota interna..."
-                                    className="w-full min-h-[100px] p-3 text-gray-700 placeholder:text-gray-300 bg-transparent resize-none focus:outline-none text-sm"
+                                    className="w-full min-h-25 p-3 text-gray-700 placeholder:text-gray-300 bg-transparent resize-none focus:outline-none text-sm"
                                 ></textarea>
                                 <div className="flex justify-end p-2 bg-gray-50/50 border-t border-gray-50 rounded-b-xl">
                                     <button
@@ -242,10 +242,10 @@ export function ModalTicket() {
                             </div>
                         )}
 
-                        <div className="relative pl-4 ml-1.5 space-y-6 before:content-[''] before:absolute before:left-0 before:top-2 before:bottom-2 before:w-[1px] before:bg-gray-200">
+                        <div className="relative pl-4 ml-1.5 space-y-6 before:content-[''] before:absolute before:left-0 before:top-2 before:bottom-2 before:w-px before:bg-gray-200">
                             {notes.map((note) => (
                                 <div key={note.id} className="relative">
-                                    <div className="absolute -left-[20px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-white bg-gray-300"></div>
+                                    <div className="absolute -left-5 top-1.5 w-2.5 h-2.5 rounded-full border-2 border-white bg-gray-300"></div>
                                     <div className="flex flex-col gap-1">
                                         <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                                             <span className="text-xs font-bold text-gray-700">{note.author}</span>
