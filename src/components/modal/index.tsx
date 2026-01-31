@@ -118,172 +118,159 @@ export function ModalTicket() {
 
     return (
         <section
-            className="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm pt-20 flex items-center justify-center px-2 sm:px-4"
+            className="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6"
             onClick={handleModalClick}
         >
             <div
                 ref={modalRef}
-                className="bg-white shadow-2xl w-full max-w-2xl md:max-w-[90vw] lg:max-w-7xl max-h-[90vh] rounded-xl overflow-hidden transform transition-all flex flex-col"
+                className="bg-white shadow-2xl w-full sm:max-w-4xl md:max-w-5xl mt-16 h-[92vh] sm:h-auto sm:max-h-[85vh] rounded-t-2xl sm:rounded-xl overflow-hidden transform transition-all flex flex-col"
             >
-                <div className="relative p-6 md:p-8 bg-white border-b border-gray-100 shrink-0">
-                    <div className="absolute top-0 left-0 w-1 h-full bg-blue-600"></div>
+                {/* --- HEADER --- */}
+                <div className="relative p-5 md:p-6 bg-white border-b border-gray-100 shrink-0">
+                    <div className="absolute top-0 left-0 w-1 h-full bg-blue-600 hidden sm:block"></div>
 
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                        <div className="flex flex-col gap-1.5">
-                            <div className="flex items-center gap-2 text-xs font-bold text-blue-600 uppercase tracking-widest">
-                                <span className="flex h-2 w-2 rounded-full bg-blue-600 animate-pulse"></span>
-                                Protocolo #{ticket?.ticket.id?.slice(-6)}
+                    <div className="flex flex-col gap-4">
+                        <div className="flex justify-between items-start">
+                            <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-2 text-[10px] font-bold text-blue-600 uppercase tracking-widest">
+                                    <span className="flex h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+                                    Protocolo #{ticket?.ticket.id?.slice(-6)}
+                                </div>
+                                <h1 className="text-lg md:text-2xl font-bold text-gray-900 tracking-tight leading-tight break-words">
+                                    {ticket?.ticket.name}
+                                </h1>
                             </div>
                             
-                            <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight leading-none">
-                                {ticket?.ticket.name}
-                            </h1>
+                            {/* Botão fechar sempre visível no topo direito */}
+                            <button
+                                className="p-2 bg-gray-50 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-lg border border-gray-100 transition-all cursor-pointer group shrink-0"
+                                onClick={handleModalVisible}
+                            >
+                                <IoClose size={18} className="group-hover:rotate-90 transition-transform duration-300" />
+                            </button>
+                        </div>
 
-                            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-1">
-                                <div className="flex items-center gap-1.5 text-sm text-gray-500">
-                                    <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div className="flex flex-wrap items-center gap-3">
+                                <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                                    <div className="w-4 h-4 rounded-full bg-gray-100 flex items-center justify-center text-[8px] font-bold text-gray-600 border border-gray-200">
                                         {ticket?.ticket.userId ? session?.user?.name?.[0] : ticket?.customer?.name?.[0]}
                                     </div>
                                     <span className="font-medium">
                                         {ticket?.ticket.userId ? session?.user?.name : ticket?.customer?.name}
                                     </span>
                                 </div>
-                                <div className="h-1 w-1 rounded-full bg-gray-300 hidden md:block"></div>
-                                <div className="flex items-center gap-1.5 text-sm text-gray-500">
-                                    <FiClock className="text-gray-400" />
-                                    <span>Criado em {new Date(ticket?.ticket.created_at || "").toLocaleDateString("pt-br")}</span>
+                                <div className="h-3 w-[1px] bg-gray-200 hidden md:block"></div>
+                                <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                                    <FiClock size={12} />
+                                    <span>{new Date(ticket?.ticket.created_at || "").toLocaleDateString("pt-br")}</span>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="flex items-center gap-3 self-start md:self-center">
-                            {/* O StatusFilter aqui assume o papel de badge interativo */}
-                            <div className="scale-105 origin-right">
+                            <div className="scale-95 md:scale-90 origin-left md:origin-right">
                                 <CustomSelect 
                                     options={options} 
                                     currentValue={currentStatus} 
                                     onSelect={handleSelect} 
                                 />
                             </div>
-                            
-                            <button
-                                className="p-2.5 bg-gray-50 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-xl border border-gray-100 transition-all duration-200 cursor-pointer group"
-                                onClick={handleModalVisible}
-                                title="Fechar"
-                            >
-                                <IoClose size={22} className="group-hover:rotate-90 transition-transform duration-300" />
-                            </button>
                         </div>
                     </div>
                 </div>
 
-                {/* --- CONTEÚDO COM SCROLL --- */}
-                <div className="p-4 md:p-6 space-y-6 overflow-y-auto custom-scrollbar scroll-smooth">
-                    {/* Bloco 2: Dados do Cliente */}
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <div className="h-6 w-1 bg-blue-600 rounded-full"></div>
-                            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500">Informações do Cliente</h2>
-                        </div>
+                {/* --- CONTEÚDO --- */}
+                <div className="p-5 md:p-6 space-y-6 overflow-y-auto custom-scrollbar scroll-smooth bg-gray-50/30">
+                    
+                    {/* Bloco: Dados do Cliente */}
+                    <div className="space-y-3">
+                        <h2 className="text-[11px] font-bold uppercase tracking-wider text-gray-400 flex items-center gap-2">
+                            <div className="h-3 w-0.5 bg-blue-500"></div> Informações do Cliente
+                        </h2>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Nome Completo</span>
-                                <p className="text-gray-800 font-semibold truncate">{ticket?.customer?.name || "Não informado"}</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <div className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm">
+                                <span className="text-[9px] font-bold text-gray-400 uppercase">Nome</span>
+                                <p className="text-gray-800 font-semibold text-sm truncate">{ticket?.customer?.name || "---"}</p>
                             </div>
-                            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">Contato</span>
-                                <p className="text-gray-800 font-semibold">{ticket?.customer?.phone || "Não informado"}</p>
+                            <div className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm">
+                                <span className="text-[9px] font-bold text-gray-400 uppercase">Contato</span>
+                                <p className="text-gray-800 font-semibold text-sm">{ticket?.customer?.phone || "---"}</p>
                             </div>
-                            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">E-mail</span>
-                                <p className="text-gray-800 font-semibold truncate">{ticket?.customer?.email || "Não informado"}</p>
+                            <div className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm sm:col-span-2 lg:col-span-1">
+                                <span className="text-[9px] font-bold text-gray-400 uppercase">E-mail</span>
+                                <p className="text-gray-800 font-semibold text-sm truncate">{ticket?.customer?.email || "---"}</p>
                             </div>
                             
-                            <div className="md:col-span-3 bg-blue-50/40 p-4 rounded-xl border border-blue-100/50 flex items-start gap-3">
-                                <div className="mt-1">
-                                    <div className="w-2 h-2 rounded-full bg-blue-400"></div>
-                                </div>
-                                <div>
-                                    <span className="text-[10px] font-bold text-blue-500 uppercase tracking-tight">Endereço de Atendimento</span>
-                                    <p className="text-gray-700 font-medium text-sm md:text-base">{ticket?.customer?.address}</p>
+                            <div className="sm:col-span-2 lg:col-span-3 bg-white p-3 rounded-lg border border-gray-100 shadow-sm flex items-start gap-2">
+                                <div className="flex-1">
+                                    <span className="text-[9px] font-bold text-blue-500 uppercase">Endereço de Atendimento</span>
+                                    <p className="text-gray-600 font-medium text-xs md:text-sm">{ticket?.customer?.address}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                   {/* Bloco 3: ANDAMENTOS */}
-                    <div className="space-y-6">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <div className="h-6 w-1 bg-orange-500 rounded-full"></div>
-                                <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500">Linha do Tempo</h2>
-                            </div>
-                            <span className="text-[10px] bg-gray-100 text-gray-500 px-2 py-1 rounded-md font-bold">
-                                {notes.length} ATUALIZAÇÕES
+                    {/* Bloco: Andamentos */}
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between border-b border-gray-100 pb-2">
+                            <h2 className="text-[11px] font-bold uppercase tracking-wider text-gray-400 flex items-center gap-2">
+                                <div className="h-3 w-0.5 bg-orange-500"></div> Linha do Tempo
+                            </h2>
+                            <span className="text-[9px] bg-gray-100 text-gray-400 px-2 py-0.5 rounded font-bold uppercase">
+                                {notes.length} Notas
                             </span>
                         </div>
 
-                        {/* Input de Novo Andamento */}
                         {ticket?.ticket.status !== "RESOLVIDO" && (
-                            <div className="bg-white rounded-2xl border-2 border-blue-50 p-2 shadow-sm focus-within:border-blue-200 transition-all">
+                            <div className="bg-white rounded-xl border border-gray-200 shadow-sm focus-within:ring-2 focus-within:ring-blue-100 transition-all">
                                 <textarea
                                     value={noteText}
                                     onChange={(e) => setNoteText(e.target.value)}
-                                    placeholder="Escreva uma atualização..."
-                                    className="w-full min-h-25 p-4 text-gray-700 placeholder:text-gray-300 bg-transparent resize-none focus:outline-none text-sm md:text-base"
+                                    placeholder="Adicionar nota interna..."
+                                    className="w-full min-h-[100px] p-3 text-gray-700 placeholder:text-gray-300 bg-transparent resize-none focus:outline-none text-sm"
                                 ></textarea>
-                                <div className="flex justify-end p-2 border-t border-gray-50">
+                                <div className="flex justify-end p-2 bg-gray-50/50 border-t border-gray-50 rounded-b-xl">
                                     <button
                                         onClick={handleAddNote}
                                         disabled={isLoading || !noteText.trim()}
-                                        className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-blue-200 active:scale-95 cursor-pointer"
+                                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 text-white text-xs font-bold rounded-lg transition-all active:scale-95 cursor-pointer"
                                     >
-                                        {isLoading ? "Salvando..." : "Publicar"}
-                                        <IoPaperPlaneOutline size={16} />
+                                        {isLoading ? "..." : "Enviar Nota"}
+                                        <IoPaperPlaneOutline size={14} />
                                     </button>
                                 </div>
                             </div>
                         )}
 
-                        {/* Lista de Andamentos com Design de Timeline */}
-                        <div className="relative pl-4 ml-2 space-y-8 before:content-[''] before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">
-                            {notes.length === 0 ? (
-                                <div className="text-center py-10">
-                                    <p className="text-gray-400 text-sm italic">Aguardando primeira atualização...</p>
-                                </div>
-                            ) : (
-                                notes.map((note) => (
-                                    <div key={note.id} className="relative">
-                                        {/* Indicador de Ponto na Timeline */}
-                                        <div className="absolute -left-5.25 top-1.5 w-3 h-3 rounded-full border-2 border-white bg-blue-500 ring-4 ring-blue-50"></div>
-                                        
-                                        <div className="flex flex-col gap-2">
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-sm font-bold text-gray-900">{note.author}</span>
-                                                <span className="text-[10px] font-medium text-gray-400 bg-gray-50 px-2 py-0.5 rounded">
-                                                    {note.date.toLocaleDateString("pt-br")} às {note.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                                                </span>
-                                            </div>
-                                            <div className="bg-white border border-gray-100 p-4 rounded-2xl rounded-tl-none shadow-sm text-gray-600 text-sm md:text-base leading-relaxed">
-                                                {note.progressText}
-                                            </div>
+                        <div className="relative pl-4 ml-1.5 space-y-6 before:content-[''] before:absolute before:left-0 before:top-2 before:bottom-2 before:w-[1px] before:bg-gray-200">
+                            {notes.map((note) => (
+                                <div key={note.id} className="relative">
+                                    <div className="absolute -left-[20px] top-1.5 w-2.5 h-2.5 rounded-full border-2 border-white bg-gray-300"></div>
+                                    <div className="flex flex-col gap-1">
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                                            <span className="text-xs font-bold text-gray-700">{note.author}</span>
+                                            <span className="text-[10px] text-gray-400">
+                                                {note.date.toLocaleDateString("pt-br")} às {note.date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                            </span>
+                                        </div>
+                                        <div className="bg-white border border-gray-200 p-3 rounded-lg rounded-tl-none shadow-[0_1px_2px_rgba(0,0,0,0.05)] text-gray-600 text-sm leading-relaxed">
+                                            {note.progressText}
                                         </div>
                                     </div>
-                                ))
-                            )}
+                                </div>
+                            ))}
                         </div>
                     </div>
-
                 </div>
 
                 {/* --- FOOTER --- */}
-                <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-end shrink-0">
+                <div className="p-4 bg-white border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+                    <span className="text-[10px] text-gray-400 font-medium order-2 sm:order-1">Dashboard v2.0</span>
                     <button
                         onClick={handleModalVisible}
-                        className="w-full sm:w-auto px-8 py-2.5 bg-gray-800 text-white font-bold rounded-lg hover:bg-red-500 transition-all duration-300 cursor-pointer shadow-md active:scale-95"
+                        className="w-full sm:w-auto px-8 py-2.5 bg-gray-900 text-white text-xs font-bold rounded-lg hover:bg-black transition-all cursor-pointer shadow-sm active:scale-95 order-1 sm:order-2"
                     >
-                        Fechar Detalhes
+                        Fechar
                     </button>
                 </div>
             </div>
