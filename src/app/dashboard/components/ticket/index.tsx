@@ -16,7 +16,6 @@ interface TicketItemProps {
 
 export function TicketItem({ customer, ticket }: TicketItemProps) {
     const router = useRouter();
-
     const { handleModalVisible, setDetailTicket } = useContext(ModalContext)
 
     async function handleChangeStatus() {
@@ -45,19 +44,19 @@ export function TicketItem({ customer, ticket }: TicketItemProps) {
         <>
             <tr
                 onClick={handleOpenModal}
-                className="border-b border-gray-100 last:border-b-0 bg-white hover:bg-blue-50/30 transition-all duration-300 group"
+                className="border-b border-gray-100 last:border-b-0 bg-white hover:bg-blue-50/30 transition-all duration-300 group cursor-pointer"
             >
-                <td className="text-left pl-4 py-4">
-                    <span className="font-semibold text-gray-700 block sm:inline">
+                <td className="text-left pl-4 py-3">
+                    <span className="font-semibold text-gray-700 text-sm sm:text-base block truncate max-w-35 sm:max-w-xs">
                         {customer?.name}
                     </span>
                 </td>
 
-                <td className="text-left hidden sm:table-cell py-4 text-gray-500 text-sm">
+                <td className="text-left hidden sm:table-cell py-3 text-gray-500 text-xs sm:text-sm">
                     {ticket?.created_at?.toLocaleDateString("pt-br")}
                 </td>
 
-                <td className="text-left py-4">
+                <td className="text-left py-3">
                     <span 
                         className={`text-xs font-bold px-3 py-1.5 rounded-full border ${
                             ticket.status === 'ABERTO' 
@@ -71,22 +70,28 @@ export function TicketItem({ customer, ticket }: TicketItemProps) {
                     </span>
                 </td>
 
-                <td className="text-right pr-4 py-4">
-                    <div className="flex items-center justify-end gap-2">
+                <td className="text-right pr-4 py-3">
+                    <div className="flex items-center justify-end gap-1 sm:gap-2">
                         <button 
-                            className="p-2 rounded-lg hover:bg-blue-100 text-blue-500 transition-colors duration-200 cursor-pointer" 
-                            onClick={handleOpenModal}
+                            className="cursor-pointer p-1.5 sm:p-2 rounded-lg hover:bg-blue-100 text-blue-500 transition-colors duration-200" 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenModal();
+                            }}
                             title="Ver detalhes"
                         >
-                            <FiFile size={20} />
+                            <FiFile className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
 
                         <button 
-                            className="p-2 rounded-lg hover:bg-green-100 text-gray-400 hover:text-green-600 transition-all duration-200 cursor-pointer" 
-                            onClick={handleChangeStatus}
+                            className="cursor-pointer p-1.5 sm:p-2 rounded-lg hover:bg-green-100 text-gray-400 hover:text-green-600 transition-all duration-200" 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleChangeStatus();
+                            }}
                             title="Mudar status"
                         >
-                            <FiCheckSquare size={20} />
+                            <FiCheckSquare className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
                     </div>
                 </td>

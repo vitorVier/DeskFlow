@@ -44,51 +44,54 @@ export default async function Customer({searchParams,
 
     return (
         <Container>
-            <main className="mt-9 mb-8 max-w-7xl mx-auto px-4">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-                    <div className="flex items-center gap-3 pl-2">
-                        <FiUsers size={32} className="text-blue-600" />
-                        <h1 className="text-3xl font-extrabold text-gray-800">Meus Clientes</h1>
+            <main className="mt-6 mb-8 max-w-7xl mx-auto px-4">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-8 border-b border-gray-100 pb-6">
+                    <div className="flex items-center gap-4">
+                        {/* Ícone com fundo Glassmorphism leve */}
+                        <div className="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-2xl border border-gray-100 text-blue-600 shadow-inner">
+                            <FiUsers size={22} />
+                        </div>
+                        
+                        <div className="flex flex-col">
+                            <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight leading-none">
+                                Meus Clientes
+                            </h1>
+                            <p className="text-xs text-gray-400 font-medium mt-1 uppercase tracking-widest">
+                                Gerenciamento de base
+                            </p>
+                        </div>
                     </div>
 
                     <Link 
                         href="/dashboard/customer/new" 
-                        className="bg-blue-600 hover:bg-blue-700 px-6 py-2.5 rounded-lg text-white font-semibold transition-all shadow-md shadow-blue-200 active:scale-95 flex items-center gap-2"
+                        className="group bg-gray-900 hover:bg-blue-600 px-6 py-2.5 rounded-2xl text-white text-[13px] font-bold transition-all duration-300 shadow-xl shadow-gray-200 hover:shadow-blue-200 active:scale-95 flex items-center gap-2"
                     >
-                        <FiUserPlus size={20} />
+                        <FiUserPlus size={16} className="group-hover:rotate-12 transition-transform" />
                         Novo Cliente
                     </Link>
                 </div>
 
-                <SearchInput placeholder="Nome do cliente..."/>
+                <div className="mb-8">
+                    <SearchInput placeholder="Buscar por nome, email ou telefone..."/>
+                </div>
 
                 {customers.length === 0 && (
-                    <section className="bg-white rounded-xl border-2 border-dashed border-gray-200 p-12 flex flex-col items-center justify-center text-center">
-                        <div className="bg-gray-50 p-4 rounded-full mb-4">
-                            <FiUsers size={48} className="text-gray-300" />
-                        </div>
-                        
-                        <h2 className="text-xl font-bold text-gray-700">Nenhum cliente por aqui...</h2>
-                        <p className="text-gray-500 mb-6">Comece cadastrando seu primeiro cliente para gerenciar tickets.</p>
-                        
-                        <Link 
-                            href="/dashboard/customer/new" 
-                            className="text-blue-600 font-bold hover:text-blue-700 hover:underline transition-all"
-                        >
+                    <section className="bg-gray-50/50 rounded-2xl border border-dashed border-gray-200 p-10 flex flex-col items-center justify-center text-center">
+                        <FiUsers size={40} className="text-gray-300 mb-3" />
+                        <h2 className="text-lg font-semibold text-gray-700">Nenhum cliente encontrado</h2>
+                        <p className="text-sm text-gray-500 mb-4">Sua lista está vazia no momento.</p>
+                        <Link href="/dashboard/customer/new" className="text-blue-600 text-sm font-bold hover:underline">
                             Cadastrar agora →
                         </Link>
                     </section>
                 )}
 
-                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
+                <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {customers.map(customer => (
-                        <CardCustomer 
-                            key={customer.id} 
-                            customer={customer}
-                        />
+                        <CardCustomer key={customer.id} customer={customer} />
                     ))}
                 </section>
-                </main>
+            </main>
         </Container>
     )
 }

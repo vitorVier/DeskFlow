@@ -3,34 +3,38 @@
 import { Container } from "@/components/container";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { FiTag, FiUsers } from "react-icons/fi"; // Ícones discretos ajudam na elegância
 
 export function DashboardHeader() {
     const pathname = usePathname();
 
-    // Classes base para os links
-    const baseStyle = "flex-1 sm:flex-none text-center px-6 py-2 rounded-lg transition-all duration-200 font-medium";
+    // Estilo base: Texto menor, tracking mais aberto para elegância e transição suave
+    const baseStyle = "relative flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2 rounded-xl transition-all duration-300 font-medium text-[13px] sm:text-sm";
     
-    // Estilo para quando a aba está ATIVA
-    const activeStyle = "bg-blue-600 text-white shadow-md shadow-blue-200";
+    // Estilo Ativo: Texto em destaque com um fundo sutil (não muito pesado)
+    const activeStyle = "bg-blue-600 text-white shadow-lg shadow-blue-500/30";
     
-    // Estilo para quando a aba está INATIVA
-    const inactiveStyle = "text-gray-600 hover:bg-blue-50 hover:text-blue-600";
+    // Estilo Inativo: Cinza suave que reage ao hover
+    const inactiveStyle = "text-gray-400 hover:text-gray-700 hover:bg-gray-100/50";
 
     return (
         <Container>
-            <nav className="w-full my-4 bg-white border border-gray-100 p-2 rounded-xl flex gap-2 shadow-sm mb-6">
+            {/* Nav: Fundo levemente translúcido e bordas bem arredondadas */}
+            <nav className="w-full my-4 bg-white/60 backdrop-blur-md border border-gray-200/50 p-1.5 rounded-2xl flex gap-1.5 shadow-sm mb-8">
                 <Link 
                     href="/dashboard" 
                     className={`${baseStyle} ${pathname === "/dashboard" ? activeStyle : inactiveStyle}`}
                 >
-                    Chamados
+                    <FiTag className={`${pathname === "/dashboard" ? "text-white" : "text-gray-400"} w-4 h-4`} />
+                    <span>Chamados</span>
                 </Link>
 
                 <Link 
                     href="/dashboard/customer" 
                     className={`${baseStyle} ${pathname.startsWith("/dashboard/customer") ? activeStyle : inactiveStyle}`}
                 >
-                    Clientes
+                    <FiUsers className={`${pathname.startsWith("/dashboard/customer") ? "text-white" : "text-gray-400"} w-4 h-4`} />
+                    <span>Clientes</span>
                 </Link>
             </nav>
         </Container>
