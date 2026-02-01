@@ -11,7 +11,7 @@ export function StatusFilter() {
     const searchParams = useSearchParams();
     const [isPending, startTransition] = useTransition();
 
-    const currentStatus = searchParams.get("status") || "all";
+    const currentStatus = searchParams.get("status") || "ABERTO";
 
     const options: SelectOption[] = [
         { value: "all", label: "Todos os chamados", color: "bg-slate-600" },
@@ -24,7 +24,7 @@ export function StatusFilter() {
         startTransition(() => {
             const params = new URLSearchParams(searchParams.toString());
             
-            if (value === "all") {
+            if (value === "ABERTO") {
                 params.delete("status");
             } else {
                 params.set("status", value);
