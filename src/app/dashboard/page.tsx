@@ -69,6 +69,12 @@ export default async function Dashboard({
         });
     }
 
+    // Filtro de Status começa com valor ABERTO
+    const activeStatus = status || "ABERTO";
+    if (activeStatus !== "all") {
+        whereCondition.AND.push({ status: activeStatus });
+    }
+
     if (status === "ABERTO" || status === "EM ANDAMENTO" || status === "RESOLVIDO") whereCondition.AND.push({status: status});
 
     const tickets = await prismaClient.ticket.findMany({

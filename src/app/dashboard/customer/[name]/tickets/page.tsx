@@ -58,7 +58,7 @@ export default async function TicketsPage({
         year:  { gte: startOfYear(today), lte: endOfYear(today) },
     };
 
-    // Filtro 
+    // Filtro de datas
     if (date && dateIntervals[date as string]) {
         whereCondition.AND.push({created_at: dateIntervals[date as string]});
     }
@@ -71,6 +71,12 @@ export default async function TicketsPage({
                 { customer: { name: { contains: search as string, mode: 'insensitive' } } } // NOME DO CLIENTE
             ]
         });
+    }
+
+    // Filtro de Status começa com valor ABERTO
+    const activeStatus = status || "ABERTO";
+    if (activeStatus !== "all") {
+        whereCondition.AND.push({ status: activeStatus });
     }
 
     // Aplica filtros de estado
