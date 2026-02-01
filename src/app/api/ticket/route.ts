@@ -7,27 +7,29 @@ import prismaClient from "@/lib/prisma";
 
 // Rota para criar tickets e atualizar o status do mesmo
 export async function PATCH(request: Request) { 
-    const { id } = await request.json();
+    // Proteção de rota
+    const session = await getServerSession(authOptions);
+    if(!session || !session.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const { id, status } = await request.json();
     const findTicket = await prismaClient.ticket.findFirst({
-        where: {
-            id: id as string
-        }
+        where: { id: id as string }
     })
 
     if(!findTicket) return NextResponse.json({ message: "Failed update ticket"}, { status: 400 })
 
     try{
-        const update = await prismaClient.ticket.update({
+        await prismaClient.ticket.update({
             where: {
                 id: id as string
             },
             data: {
-                status: "RESOLVIDO"
+                status: status
             }
         })
 
         return NextResponse.json({ message: "Chamado atualizado com sucesso!" })
-    } catch { return }
+    } catch (err) { return NextResponse.json({ message: "Failed update ticket"}, { status: 500 }) }
 }
 
 // Rota para criar um novo ticket e associá-lo a um cliente existente
@@ -62,5 +64,32 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: "Ticket registrado com sucesso!", ticketId: ticket.id })
     } catch(err) {
         return NextResponse.json({ error: "Filed create new ticket!" }, { status: 500 })
+    }
+}
+
+export async function DELETE(request: Request) {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    const { searchParams } = new URL(request.url);
+    const ticketId = searchParams.get("id");
+    if (!ticketId) return NextResponse.json({ error: "Ticket ID is required" }, { status: 400 });
+
+    try {
+        const ticket = await prismaClient.ticket.findUnique({
+            where: { id: ticketId }
+        });
+
+        if (!ticket) return NextResponse.json({ error: "Ticket not found" }, { status: 404 });
+        if (ticket.userId !== session.user.id) return NextResponse.json({ error: "You do not have permission to delete this ticket" }, { status: 403 });
+
+        await prismaClient.ticket.delete({
+            where: { id: ticketId }
+        });
+
+        return NextResponse.json({ message: "Ticket deleted successfully" });
+    
+    } catch(err) {
+        return NextResponse.json({ error: "Failed to delete ticket" }, { status: 500 });
     }
 }

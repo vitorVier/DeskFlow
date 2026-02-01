@@ -52,7 +52,12 @@ export default async function Dashboard({
     };
 
     if (date && dateIntervals[date as string]) {
-        whereCondition.AND.push({created_at: dateIntervals[date as string]});
+        whereCondition.AND.push({
+            created_at: {
+                gte: dateIntervals[date as string].gte,
+                lte: dateIntervals[date as string].lte,
+            }
+        });
     }
 
     if (search) {

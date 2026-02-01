@@ -2,10 +2,10 @@
 
 import { CustomerProps } from "@/utils/customer.type";
 import { TicketProps } from "@/utils/ticket.type";
-import { FiCheckSquare, FiFile } from "react-icons/fi";
+import { FiFile, FiTrash2 } from "react-icons/fi";
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { useContext, useRef, MouseEvent } from "react";
 import { ModalContext } from "@/providers/modal";
 import toast from "react-hot-toast";
 
@@ -18,11 +18,9 @@ export function TicketItem({ customer, ticket }: TicketItemProps) {
     const router = useRouter();
     const { handleModalVisible, setDetailTicket } = useContext(ModalContext)
 
-    async function handleChangeStatus() {
+    async function handleDeleteTicket() {
         try {
-            await api.patch("/api/ticket", {
-                id: ticket.id
-            })
+            await api.delete("/api/ticket?id=" + ticket.id)
             
         } catch(err){
             console.log(err)
@@ -40,10 +38,17 @@ export function TicketItem({ customer, ticket }: TicketItemProps) {
         })
     }
 
+    const modalRef = useRef<HTMLButtonElement | null>(null);
+    const handleModalClick = (e: MouseEvent<HTMLDivElement>) => {
+        if (modalRef.current && !modalRef.current?.contains(e.target as Node)) {
+            handleOpenModal();
+        }
+    }
+
     return (
         <>
             <tr
-                onClick={handleOpenModal}
+                onClick={handleModalClick}
                 className="border-b border-gray-50 last:border-b-0 bg-white hover:bg-blue-50/20 transition-all duration-300 group cursor-pointer"
             >
                 <td className="pl-6 py-4">
@@ -72,10 +77,8 @@ export function TicketItem({ customer, ticket }: TicketItemProps) {
                 <td className="py-4">
                     <span 
                         className={`text-xs font-bold px-3 py-1 rounded-full border ${
-                            ticket.status === 'ABERTO' 
-                            ? 'bg-blue-100 text-blue-700 border-blue-200' 
-                            : ticket.status === 'EM ATENDIMENTO'
-                            ? 'bg-orange-100 text-orange-700 border-orange-200'
+                            ticket.status === 'ABERTO' ? 'bg-blue-100 text-blue-700 border-blue-200' 
+                            : ticket.status === 'EM ANDAMENTO' ? 'bg-orange-100 text-orange-700 border-orange-200'
                             : 'bg-emerald-100 text-emerald-700 border-emerald-200' // Para o RESOLVIDO
                         }`}
                     >
@@ -88,8 +91,11 @@ export function TicketItem({ customer, ticket }: TicketItemProps) {
                         <button className="cursor-pointer p-1.5 sm:p-2 rounded-lg hover:bg-blue-100 text-blue-500 transition-colors duration-200">
                             <FiFile size={18} />
                         </button>
-                        <button className="cursor-pointer p-1.5 sm:p-2 rounded-lg hover:bg-green-100 text-gray-400 hover:text-green-600 transition-all duration-200">
-                            <FiCheckSquare size={18} />
+                        <button 
+                            ref={modalRef} 
+                            onClick={handleDeleteTicket}
+                            className="cursor-pointer p-1.5 sm:p-2 rounded-lg hover:bg-red-100 text-gray-400 hover:text-red-600 transition-all duration-200">
+                            <FiTrash2 size={18} />
                         </button>
                     </div>
                 </td>

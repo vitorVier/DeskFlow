@@ -25,10 +25,10 @@ export function ModalTicket() {
     const modalRef = useRef<HTMLDivElement | null>(null);
 
     // Estado para o texto do novo andamento
-    const [noteText, setNoteText] = useState("");
+    const [ noteText, setNoteText ] = useState("");
     const [ isLoading, setIsLoading ] = useState(false)
     
-    // Estado para a lista de andamentos (Simulação)
+    // Estado para a lista de andamentos
     const [notes, setNotes] = useState<TicketNote[]>([]);
 
     // Carrega os andamentos quando o componente é montado ou atualizado
@@ -46,6 +46,12 @@ export function ModalTicket() {
             }
         }
         loadComments();
+    }, [ticket]);
+
+    useEffect(() => {
+        if (ticket?.ticket.status) {
+            setCurrentStatus(ticket.ticket.status);
+        }
     }, [ticket]);
 
     const handleModalClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -86,13 +92,10 @@ export function ModalTicket() {
         }
     }
 
-    // Status Filter Lógica
+    // Lógica do Status
     const router = useRouter();
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
     const [isPending, startTransition] = useTransition();
-
-    const currentStatus = searchParams.get("status") || "all";
+    const [currentStatus, setCurrentStatus] = useState("ABERTO");
 
     const options: SelectOption[] = [
         { value: "ABERTO", label: "Aberto", color: "bg-blue-600" },
@@ -100,21 +103,24 @@ export function ModalTicket() {
         { value: "RESOLVIDO", label: "Resolvido", color: "bg-emerald-600" },
     ];
 
-    const handleSelect = useCallback((value: string) => {
-        startTransition(() => {
-            const params = new URLSearchParams(searchParams.toString());
-            
-            if (value === "all") {
-                params.delete("status");
-            } else {
-                params.set("status", value);
+    const handleSelect = useCallback(async (value: string) => {
+        startTransition(async () => {
+            try {
+                // 1. Faz a chamada para atualizar o status no banco de dados
+                await api.patch("/api/ticket", {
+                    id: ticket?.ticket.id,
+                    status: value
+                });
+
+                setCurrentStatus(value);
+                router.refresh(); 
+                toast.success(`Status atualizado para ${value}`);
+                
+            } catch (error) {
+                toast.error("Falha ao atualizar status");
             }
-            
-            router.replace(`${pathname}?${params.toString()}`, {
-                scroll: false
-            });
         });
-    }, [pathname, searchParams, router]);
+    }, [ticket, router]);
 
     return (
         <section
