@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DevControl - Seu sistema de gerenciamento de desenvolvimento",
+  title: "DeskFlow - Seu sistema de gerenciamento de desenvolvimento",
   description: "Gerencie seus clientes e atendimentos de forma fácil!.",
 };
 
