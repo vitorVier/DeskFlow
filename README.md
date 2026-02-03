@@ -1,4 +1,4 @@
-# 🚀 DevControl
+# 🚀 DeskFlow
 
 > **Central de Gerenciamento de Suporte (SaaS)**  
 > Plataforma completa para controle de chamados e gestão de clientes, com foco em performance, segurança e excelente UX.
@@ -34,7 +34,7 @@
 
 # 📖 Sobre o Projeto
 
-O **DevControl** é uma solução SaaS voltada para empresas de suporte técnico que precisam gerenciar chamados, clientes e históricos de atendimento em um único sistema.
+O **DeskFlow** é uma solução SaaS voltada para empresas de suporte técnico que precisam gerenciar chamados, clientes e históricos de atendimento em um único sistema.
 
 O projeto foi construído com foco em:
 
@@ -161,8 +161,8 @@ Exemplos:
 ## 1️⃣ Clone o repositório
 
 ```bash
-git clone https://github.com/vitorVier/devControl.git
-cd devControl
+git clone https://github.com/vitorVier/DeskFlow.git
+cd DeskFlow
 ```
 
 ## 2️⃣ Instale dependências
