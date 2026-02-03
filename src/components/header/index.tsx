@@ -31,8 +31,8 @@ export function Header() {
                 
                 <Link href="/">
                     <h1 className="font-extrabold text-2xl tracking-tight transition-all duration-300 hover:opacity-80">
-                        <span className="text-blue-600">DEV</span>
-                        <span className="text-gray-800">CONTROLE</span>
+                        <span className="text-blue-600">DESK</span>
+                        <span className="text-gray-800">FLOW</span>
                     </h1>
                 </Link>
 
