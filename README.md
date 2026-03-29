@@ -137,8 +137,6 @@ Histórico de andamento dos chamados.
 
 # 🎨 Demonstração
 
-> ⚠️ Adicione aqui prints ou GIFs para aumentar impacto do projeto.
-
 Exemplos:
 
 - Tela de Login  
